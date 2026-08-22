@@ -8,8 +8,6 @@ tags: ["React Router 7", "Remix", "SEO", "robots.txt"]
 
 import Alert from "@/components/Alert.astro";
 import ProfileBadge from "@/components/ProfileBadge.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 A properly configured `robots.txt` file is crucial for controlling how search engines crawl and index your website. Instead of serving a static file, generating it dynamically allows you to adapt the rules based on your environment.
 
 <Alert type="question" title="What exactly is a robots.txt file?">
@@ -63,8 +61,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 ```
 
 ### Breaking Down the Implementation
-
-<NewsletterForm client:visible />
 
 Let's examine what each part of this code does:
 

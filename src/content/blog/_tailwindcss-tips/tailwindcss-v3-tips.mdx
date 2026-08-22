@@ -11,8 +11,6 @@ import Alert from "@/components/Alert.astro";
 import ProfileBadge from "@/components/ProfileBadge.astro";
 import GradientHeading from "./GradientHeading.astro";
 import BreakoutSection from "./BreakoutSection.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 Over the past years, I've used Tailwind CSS in almost every web project I've undertaken. Along the way, I've picked up a few handy tips and tricks that I'd like to share.
 
 <Alert type="question" title="Do you use Tailwind CSS v4?">
@@ -61,8 +59,6 @@ export default {
 ```
 
 You can enable automatic centring of the container, as well as a default padding value and breakpoint-specific padding values that can be adjusted as required.
-
-<NewsletterForm client:visible />
 
 Now, simply use the `container` class and have the same result, without any further code.
 

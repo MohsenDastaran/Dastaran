@@ -9,8 +9,6 @@ cover: "./shiki-syntax-highlighting.webp"
 
 import Alert from "@/components/Alert.astro";
 import ProfileBadge from "@/components/ProfileBadge.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 For integrating code blocks on this website I was looking for a modern approach to syntax highlighting and came across
 [Shiki](https://shiki.style/), a pretty new syntax highlighter created by <ProfileBadge handle="octref" platform="GitHub">Pine Wu</ProfileBadge> and maintained and rewritten by <ProfileBadge handle="antfu" platform="GitHub">Anthony Fu</ProfileBadge>. It is used by big companies like [Vercel](https://vercel.com/) for their [Next.js](https://nextjs.org/docs) docs or [Astro](https://astro.build/) for their [syntax highlighting](https://docs.astro.build/en/guides/syntax-highlighting/). As I couldn't find a guide myself for the app router of Next.js 13 and above, I thought I'll write one by myself.
 
@@ -92,8 +90,6 @@ npm install -D shiki
 ```
 
 ## Create the code component
-
-<NewsletterForm client:visible />
 
 Now that we have installed everything we can integrate Shiki. So let's create a new folder called `components` in which we create a new file called `Code.tsx` which will be our code server component. Let's add a basic structure for this component.
 

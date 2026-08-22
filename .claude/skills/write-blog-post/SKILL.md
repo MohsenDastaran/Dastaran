@@ -59,14 +59,13 @@ cover: "./cover-image.webp"
 
 ### 3. Propose the outline
 
-Suggest the H2/H3 structure (these populate the table of contents) plus where the
-intro, newsletter form, and any alerts/images go. Get a thumbs-up before drafting.
+Suggest the H2/H3 structure (these populate the table of contents) plus where
+intro, alerts, and images go. Get a thumbs-up before drafting.
 
 A typical shape:
 
 - Intro (no heading) - the hook, 1-3 short paragraphs.
 - 2-5 `##` sections, optionally with `###` subsections.
-- `<NewsletterForm client:visible />` placed once, around the middle.
 - A short closing paragraph (no "Conclusion" heading - see style rules).
 
 ### 4. Draft section by section
@@ -175,9 +174,7 @@ Common imports (only import what the post actually uses):
 
 ```mdx
 import Alert from "@/components/Alert.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
 import ProfileBadge from "@/components/ProfileBadge.astro";
-import Video from "@/components/Video.astro";
 ```
 
 - **`<Alert>`** - the main teaching device. Pick the type deliberately:
@@ -186,12 +183,8 @@ import Video from "@/components/Video.astro";
   - `type="warning"` - gotchas and things that trip people up.
   - `type="question"` - FAQ-style aside, almost always with a question in `title`
     (e.g. `title="Why not use autocomplete=off?"`).
-- **`<NewsletterForm client:visible />`** - exactly **once** per post, around the
-  middle, often placed right under a heading. The `client:visible` directive is
-  required or the form 405s on static pages.
 - **`<ProfileBadge>`** - inline links to GitHub profiles/repos
   (`<ProfileBadge handle="antfu" platform="GitHub">Anthony Fu</ProfileBadge>`).
-- **`<Video>`** - for Mux-hosted video embeds.
 
 ## Quick checklist before publishing
 
@@ -199,7 +192,6 @@ import Video from "@/components/Video.astro";
 - [ ] Frontmatter complete; `publicationDate` set; tags reused where possible
 - [ ] Opens with a personal/temporal hook, not a definition
 - [ ] Headings in sentence case, TOC reads well
-- [ ] Exactly one `<NewsletterForm client:visible />` around the middle
 - [ ] Code blocks introduced with a colon, explained after with "This..."
 - [ ] Links resolve; own posts cross-linked with relative paths
 - [ ] Metrics in bold; screenshots have descriptive alt text

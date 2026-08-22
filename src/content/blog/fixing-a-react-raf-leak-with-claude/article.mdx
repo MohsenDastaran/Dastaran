@@ -6,7 +6,6 @@ tags: ["React", "Performance", "Debugging", "Coding Agents"]
 ---
 
 import Alert from "@/components/Alert.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
 import SelfHostedVideo from "./SelfHostedVideo.astro";
 import chatLagMp4 from "./chat-lag.mp4?url";
 import chatLagPoster from "./chat-lag-poster.jpg?url";
@@ -70,8 +69,6 @@ I'd given Claude one rule from the start: **don't just change code, reproduce th
 So once I said "use the Chrome profiler," it mostly took over on its own.
 
 It spun up a fresh chat, typed a prompt that forces a long, streaming answer (the worst case), recorded a Chrome trace around the streaming with [`agent-browser profiler start`](https://agent-browser.dev/profiler) / [`stop`](https://agent-browser.dev/profiler), and dumped the raw trace to a JSON file.
-
-<NewsletterForm client:visible />
 
 ## A trace file that was way too big
 

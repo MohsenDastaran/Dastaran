@@ -1,17 +1,16 @@
 # AGENTS.md
 
-Personal portfolio website (https://www.nikolailehbr.ink/) built with Astro 6, React 19, TypeScript, and Tailwind CSS v4. Features a blog with MDX, an AI chatbot (LLamaIndex + Vercel AI SDK + OpenAI), newsletter system (Resend), and view counting (Astro DB).
+Personal portfolio website (https://www.nikolailehbr.ink/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog with MDX, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
 
 ## Commands
 
 - **Dev server:** `pnpm dev` (opens browser, exposes on network)
-- **Build:** `pnpm build` (uses `astro build --remote` for remote DB)
-- **Preview:** `pnpm preview` (uses dotenv for env vars, Node adapter locally)
+- **Build:** `pnpm build`
+- **Preview:** `pnpm preview` (uses dotenv for env vars, Node adapter)
 - **Lint:** `pnpm lint` (ESLint for ts/tsx/astro files)
 - **Format:** `pnpm format` (Prettier with Astro, Tailwind, classnames plugins)
 - **Test:** `pnpm test` (Vitest, runs in watch mode)
 - **Unused deps:** `pnpm knip`
-- **Email preview:** `pnpm dev:email` (React Email dev server)
 
 ## Git Workflow
 
@@ -33,9 +32,9 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 ### Layouts & Pages
 
 - `src/layouts/RootLayout.astro` — Base layout (navbar, footer, SEO head)
-- `src/layouts/BlogPost.astro` — Blog post wrapper (metadata, TOC, reading time, view count)
+- `src/layouts/BlogPost.astro` — Blog post wrapper (metadata, TOC, reading time, view count, comments)
 - Pages in `src/pages/` follow Astro file-based routing
-- API endpoints: `src/pages/api/chat/` (AI chat), `src/pages/api/newsletter/` (verification)
+- API endpoints: `src/pages/api/chat/` (AI chat)
 
 ### Components
 
@@ -43,7 +42,6 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 - `src/components/react/` — Interactive React components (forms, chat, image zoom)
 - `src/components/react/ui/` — shadcn/ui components (new-york style, neutral base color)
 - `src/components/react/chat/` — AI chatbot UI components
-- `src/components/react/emails/` — React Email templates
 
 ### Key Utilities
 
@@ -55,7 +53,7 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 
 ### Database
 
-Astro DB (SQLite) with a `ViewCount` table, configured in `db/config.ts`, seeded in `db/seed.ts`.
+Drizzle ORM + libSQL (Turso in production, local file in dev) with a `ViewCount` table in `src/db/schema.ts`.
 
 ## Code Style
 
@@ -123,7 +121,6 @@ Key patterns:
 - `h2` (`##`) for main sections, `h3` (`###`) for subsections - these populate the table of contents
 - Start with a brief intro (no heading) that sets context and motivation
 - End naturally, often with a short closing thought or invitation for feedback - not a heavy "conclusion" section
-- Include a `<NewsletterForm client:visible />` component roughly halfway through the post
 
 ### MDX Components
 
@@ -131,17 +128,11 @@ Common imports used across posts:
 
 ```mdx
 import Alert from "@/components/Alert.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
 import ProfileBadge from "@/components/ProfileBadge.astro";
-import Video from "@/components/Video.astro";
-
-;
 ```
 
 - `<Alert>` - for tips, warnings, info boxes, and questions. Types: `tip`, `warning`, `info`, `question`. Use `title` prop for custom headings.
-- `<NewsletterForm client:visible />` - placed once per post, usually between sections around the middle. The `client:visible` directive is required so React hydrates the form; without it, the form falls back to a native POST that 405s on static blog pages
 - `<ProfileBadge>` - for linking to GitHub repos/profiles inline
-- `<Video>` - for Mux-hosted video embeds
 
 ### Code Blocks
 
@@ -156,4 +147,4 @@ Fenced code blocks support these meta options:
 
 ## Adapter
 
-Vercel adapter in production (`process.env.VERCEL`), Node adapter for local preview. The adapter is selected dynamically in `astro.config.ts`.
+Node adapter (`@astrojs/node`, standalone mode) in `astro.config.ts`.

@@ -10,7 +10,6 @@ import { generateBlogId } from "./utils";
  */
 
 const BLOG_DIR = "src/content/blog";
-const THOUGHTS_DIR = "src/content/thoughts";
 
 /** Walk a directory recursively and return every `.md`/`.mdx` file path. */
 function findContentFiles(dir: string): Array<string> {
@@ -69,7 +68,6 @@ export function getLastmodMap(): Map<string, string> {
   };
 
   collect(BLOG_DIR, (rel) => `/blog/${generateBlogId(rel)}`);
-  collect(THOUGHTS_DIR, (rel) => `/thoughts/${rel.split("/")[0]}`);
 
   return map;
 }

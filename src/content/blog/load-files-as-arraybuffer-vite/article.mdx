@@ -5,8 +5,6 @@ publicationDate: "2025-08-11T20:15:00Z"
 tags: ["Vite", "ArrayBuffer", "Fonts", "Open Graph"]
 ---
 
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 [Vite](https://vite.dev/) normally handles files like `.ttf` fonts by [returning their URLs](https://vite.dev/guide/assets.html#importing-asset-as-url). That works for most cases, but sometimes you need the imported data in a different format.
 
 I encountered this when trying to [generate dynamic Open Graph images](https://github.com/nikolailehbrink/portfolio/commit/9fcd942ffbfafa31234b75b8c359fa64e65c7373) with [`@vercel/og`](https://vercel.com/docs/functions/og-image-generation). The API allows you to embed fonts directly, but it expects the font data as an [`ArrayBuffer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer).
@@ -43,8 +41,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   });
 }
 ```
-
-<NewsletterForm client:visible />
 
 ### TypeScript Support
 

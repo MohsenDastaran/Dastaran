@@ -2,9 +2,7 @@
 import BaseHead from "../../components/BaseHead.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
 import { getBlogTags, getPosts } from "@/lib/posts";
-import NewsletterForm from "@/components/react/NewsletterForm";
 import PostTeaser from "@/components/PostTeaser.astro";
-import { track } from "@vercel/analytics/server";
 import { badgeVariants } from "@/components/react/ui/badge";
 import { cn } from "@/lib/utils";
 import Schema from "@/components/Schema.astro";
@@ -62,9 +60,6 @@ const schemaPosts = await Promise.all(
   }),
 );
 
-if (filteredTag) {
-  await track("blog-tag-filtered", { tag: filteredTag.name });
-}
 const hasFilteredTag = filteredTag !== undefined;
 ---
 
@@ -96,7 +91,6 @@ const hasFilteredTag = filteredTag !== undefined;
     <p class="max-w-prose text-muted-foreground sm:text-center">
       {description}
     </p>
-    <NewsletterForm client:visible showText={false} className="max-w-2xl" />
     <div class="relative mt-4 w-full max-w-xl">
       <MagnifyingGlassIcon
         size={20}

@@ -7,8 +7,6 @@ tags: ["Deno", "Postmark", "Email", "TypeScript"]
 
 import ProfileBadge from "@/components/ProfileBadge.astro";
 import Alert from "@/components/Alert.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 Recently, we needed to send over 37k emails to our users. This task required a reliable, efficient solution that
 could handle batch processing while maintaining detailed logs for
 troubleshooting. We chose to build our solution using [Deno](https://deno.land/)
@@ -107,8 +105,6 @@ while (users.length > 0) {
 ```
 
 Now, let's break down the key components and Deno-specific features.
-
-<NewsletterForm client:visible />
 
 ## Deno Features Showcase
 

@@ -1,6 +1,5 @@
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { cn } from "@/lib/utils";
-import { track } from "@vercel/analytics";
 
 export default function CopyToClipboardButton({ code }: { code: string }) {
   const { copiedText, copyToClipboard, idle } = useCopyToClipboard();
@@ -20,9 +19,6 @@ export default function CopyToClipboardButton({ code }: { code: string }) {
       disabled={!idle}
       onClick={() => {
         copyToClipboard(code);
-        track("copy-code-block", {
-          code,
-        });
       }}
       aria-label={idle ? "Copy code to clipboard" : "Code copied"}
       title={idle ? "Copy code to clipboard" : "Code copied"}

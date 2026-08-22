@@ -13,7 +13,6 @@ import { MailboxIcon } from "@phosphor-icons/react/dist/ssr/Mailbox";
 import { StudentIcon } from "@phosphor-icons/react/dist/ssr/Student";
 import { TextColumnsIcon } from "@phosphor-icons/react/dist/ssr/TextColumns";
 import { buttonVariants } from "@/components/react/ui/button";
-import NewsletterForm from "@/components/react/NewsletterForm";
 import ContactForm from "@/components/react/ContactForm";
 import PostTeaser from "@/components/PostTeaser.astro";
 import { getPosts } from "@/lib/posts";
@@ -172,7 +171,6 @@ const educationExperiences = career.filter(
             </div>
           ) : null
         }
-        <NewsletterForm showText={false} client:visible />
       </div>
     </div>
     <div class="grid w-full grid-cols-1 gap-12 lg:grid-cols-2">

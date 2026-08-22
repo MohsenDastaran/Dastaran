@@ -8,8 +8,6 @@ tags: ["React Router 7", "Remix", "Fonts", "Tips and Tricks"]
 
 import Alert from "@/components/Alert.astro";
 import ProfileBadge from "@/components/ProfileBadge.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 Ever since I began to use Remix and its successor React Router 7, I have been on the lookout for a guide on how to handle fonts in the framework properly. Seeing the reactions to the <ProfileBadge platform="GitHub" handle="remix-run/remix/discussions/9251">Fonts Guide proposal</ProfileBadge> I am certainly not the only one. So, this post aims to fill that gap and to provide you with some tips to get you started more quickly with your font setup.
 
 {/* prettier-ignore */}
@@ -89,8 +87,6 @@ Let's suppose you bought a font from [MyFonts](https://www.myfonts.com/) or some
 
 ### Using Fontsource
 
-<NewsletterForm client:visible />
-
 With [Fontsource](https://fontsource.org/) you not only get the benefits of self-hosting, but also the convenience of using a package manager instead of manually downloading and managing font files. The library provides a wide range of fonts, including [Google Fonts](https://fonts.google.com/) and other popular open-source fonts.
 
 1. **Find and install your font**
@@ -151,7 +147,7 @@ If you use Tailwind CSS (I am using v4 here), you can use either method above, t
    ```postcss filename="app/app.css" {5}
    @import "tailwindcss";
    /* ... */
-
+   
    @theme {
      --font-sans: "Inter Variable", "sans-serif";
    }

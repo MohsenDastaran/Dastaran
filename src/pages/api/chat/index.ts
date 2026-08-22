@@ -8,7 +8,6 @@ import {
   toUIMessageStream,
   type UIMessage,
 } from "ai";
-import { track } from "@vercel/analytics/server";
 import type { APIRoute } from "astro";
 import { z } from "astro/zod";
 import { CHAT_MODEL, CHAT_KNOWLEDGE_BASE } from "@/lib/ai";
@@ -52,7 +51,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const messages = parsed.data.messages as Array<MyUIMessage>;
   const messageCount = cookies.get("message_count")?.number();
-  await track("submit-ai-message");
 
   if (messageCount !== undefined && messageCount >= AI_CHAT_MESSAGE_LIMIT) {
     return new Response("Message limit reached", { status: 403 });

@@ -5,8 +5,6 @@ publicationDate: "2025-08-25T20:50:00Z"
 tags: ["Next.js", "Tips and Tricks"]
 ---
 
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 When working on a Next.js project with **deeply nested routes**, I wanted a simple way to navigate “up” the hierarchy without composing the entire path every time.
 
 Normally this wouldn't be much of a problem, but in my case, I had dynamic segments in the URL (like `/tasks/[id]/details/...`), which meant that I had to
@@ -61,8 +59,6 @@ export default async function Page() {
   );
 }
 ```
-
-<NewsletterForm client:visible />
 
 ## Comparison in practice
 

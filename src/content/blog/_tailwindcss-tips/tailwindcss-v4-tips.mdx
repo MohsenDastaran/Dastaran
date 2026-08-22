@@ -11,8 +11,6 @@ import Alert from "@/components/Alert.astro";
 import ProfileBadge from "@/components/ProfileBadge.astro";
 import GradientHeading from "./GradientHeading.astro";
 import BreakoutSection from "./BreakoutSection.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 Over the past years, I've used Tailwind CSS in almost every web project I've undertaken. Along the way, I've picked up a few handy tips and tricks that I'd like to share.
 
 <Alert type="question" title="Do you still use Tailwind CSS v3?">
@@ -119,8 +117,6 @@ The code above achieves that functionality, but always having to centre the cont
 ```
 
 This centers your container and adds consistent horizontal padding, all by simply extending the utility.
-
-<NewsletterForm client:visible />
 
 Now, simply use the `container` class and have the same result, without any further code.
 

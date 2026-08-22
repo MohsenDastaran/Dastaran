@@ -7,8 +7,6 @@ cover: "./TableOfContents.webp"
 ---
 
 import Alert from "@/components/Alert.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 Recently I added the Table of Contents you see on this post to my website. I'm using MDX to write blog posts and wanted a ToC that updates automatically based on the post's headings.
 
 Here's how I set it up and how you can too.
@@ -103,8 +101,6 @@ export async function getPosts() {
 ```
 
 ## Load the table of contents in your layout
-
-<NewsletterForm client:visible />
 
 You can now use this function in your route loader to fetch the ToC:
 

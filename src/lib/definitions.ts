@@ -3,13 +3,6 @@ import z from "zod";
 
 const phoneRegex = /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/;
 
-export const newsletterFormSchema = coerceFormValue(
-  z.object({
-    email: z.email("Please enter a valid email address."),
-    company: z.string().optional(),
-  }),
-);
-
 export const contactFormSchema = coerceFormValue(
   z.object({
     email: z.email("Please enter a valid email address."),

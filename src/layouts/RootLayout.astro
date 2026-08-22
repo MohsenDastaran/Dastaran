@@ -2,7 +2,6 @@
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import BaseHead from "@/components/BaseHead.astro";
 import { SITE_DESCRIPTION, SITE_TITLE, THEME_COLOR } from "@/consts";
-import Analytics from "@vercel/analytics/astro";
 import "../styles/global.css";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer.astro";
@@ -72,10 +71,6 @@ const canonicalURL = getCanonicalUrl(pathname, Astro.site);
     <slot name="head">
       <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     </slot>
-
-    <!-- Vercel Analytics -->
-    <!-- Has to come last, because otherwise it would trigger the next tags coming in the body..?! The fuck: https://stackoverflow.com/questions/21643740/head-tags-are-appearing-inside-body  -->
-    <Analytics />
   </head>
   <body class="font-sans">
     <a

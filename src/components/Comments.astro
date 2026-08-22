@@ -1,0 +1,59 @@
+---
+import type { Comment } from "@/data/comments";
+import { formatDate } from "@/lib/format";
+import { ChatTeardropDotsIcon } from "@phosphor-icons/react/dist/ssr/ChatTeardropDots";
+
+type Props = {
+  comments: Array<Comment>;
+};
+
+const { comments } = Astro.props;
+
+function getInitials(name: string): string {
+  return name
+    .split(" ")
+    .filter((part) => part.length > 0)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+---
+
+<section id="comments" class="mx-auto flex w-full max-w-4xl flex-col gap-4">
+  <h2 class="flex items-center gap-1 text-2xl font-bold">
+    <ChatTeardropDotsIcon size={28} weight="duotone" />
+    Comments
+  </h2>
+  {
+    comments.length > 0 ? (
+      <ul class="flex flex-col gap-4">
+        {comments.map((comment) => (
+          <li class="rounded-xl border bg-card p-4 offset-border">
+            <div class="mb-3 flex items-center gap-2 text-sm">
+              <span
+                class="flex size-10 shrink-0 items-center justify-center
+                  rounded-full bg-muted font-medium"
+                aria-hidden="true"
+              >
+                {getInitials(comment.author)}
+              </span>
+              <div class="flex flex-col">
+                <span>{comment.author}</span>
+                <time
+                  class="text-xs text-muted-foreground"
+                  datetime={comment.publishedAt.toISOString()}
+                >
+                  {formatDate(comment.publishedAt)}
+                </time>
+              </div>
+            </div>
+            <p class="text-sm text-muted-foreground">{comment.body}</p>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-sm text-muted-foreground">No comments yet.</p>
+    )
+  }
+</section>

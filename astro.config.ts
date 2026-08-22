@@ -1,6 +1,5 @@
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
-import vercel from "@astrojs/vercel";
 import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig, envField, logHandlers } from "astro/config";
@@ -18,16 +17,11 @@ import {
 import { transformerCodeBlock } from "./src/lib/shiki/transformerCodeBlock";
 import { transformerLineNumbers } from "./src/lib/shiki/transformerLineNumbers";
 import { getLastmodMap } from "./src/lib/sitemap";
-import { indexNow } from "./src/lib/indexnow";
-
-const PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
 // Built once and reused for every sitemap entry rather than per call.
 const lastmodMap = getLastmodMap();
 
-const site = PRODUCTION_URL
-  ? new URL(`https://${PRODUCTION_URL}`).href
-  : "https://www.nikolailehbr.ink/";
+const site = "https://www.nikolailehbr.ink/";
 
 export default defineConfig({
   markdown: {
@@ -67,8 +61,8 @@ export default defineConfig({
     },
   },
   prefetch: true,
-  // Structured JSON logs for Vercel observability on the SSR functions
-  // (chat/newsletter). `logger` is stable since Astro 7.
+  // Structured JSON logs for the SSR functions (chat). `logger` is stable
+  // since Astro 7.
   logger: logHandlers.json({ pretty: true }),
   site,
   env: {
@@ -89,7 +83,6 @@ export default defineConfig({
   },
   redirects: {
     "/blog/tailwind-css-tips": "/blog/tailwindcss-v3-tips",
-    "/blog/dear-danya": "/thoughts/dear-danya",
   },
   integrations: [
     mdx({
@@ -98,7 +91,6 @@ export default defineConfig({
       },
     }),
     sitemap({
-      filter: (page) => !page.includes("/newsletter/"),
       serialize(item) {
         const pathname = new URL(item.url).pathname.replace(/\/$/, "");
         const lastmod = lastmodMap.get(pathname);
@@ -109,7 +101,6 @@ export default defineConfig({
       },
     }),
     react(),
-    indexNow(),
   ],
   vite: {
     plugins: [tailwindcss(), arraybuffer()],
@@ -118,13 +109,7 @@ export default defineConfig({
     open: true,
     host: true,
   },
-  // Local preview doesnt work with Vercel adapter, but with Node
-  adapter: process.env.VERCEL
-    ? vercel({
-        imageService: true,
-        skewProtection: true,
-      })
-    : node({
-        mode: "standalone",
-      }),
+  adapter: node({
+    mode: "standalone",
+  }),
 });

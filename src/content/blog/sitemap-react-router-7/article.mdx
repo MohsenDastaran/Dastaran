@@ -8,8 +8,6 @@ tags: ["React Router 7", "SEO", "Sitemap", "Remix"]
 
 import Alert from "@/components/Alert.astro";
 import ProfileBadge from "@/components/ProfileBadge.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 If you’re building a website or web application, you’ll want to make sure your site is discoverable by search engines. One essential step is providing a [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview) that lists all your public routes.
 
 <Alert type="question" title="Why automate your sitemap?">
@@ -59,8 +57,6 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 ```
 
 ### What’s happening here?
-
-<NewsletterForm client:visible />
 
 1.  Dynamically import `virtual:react-router/server-build` to get your route definitions.
     <Alert type="info">

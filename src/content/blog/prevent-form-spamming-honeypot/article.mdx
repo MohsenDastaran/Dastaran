@@ -7,8 +7,6 @@ cover: "./form-spam-submissions.webp"
 ---
 
 import Alert from "@/components/Alert.astro";
-import NewsletterForm from "@/components/react/NewsletterForm";
-
 Almost everyone who has a form on their website has faced the same frustration:
 You create or activate a form, and within a day you get your first submission. You’re excited, until you open it and see that some [Nigerian Prince](https://www.expressvpn.com/blog/nigerian-prince-scam/) is telling you you’ve won the lottery.
 
@@ -92,8 +90,6 @@ export async function action({ request }: Route.ActionArgs) {
 ### Use a generic field name
 
 Choose a common field name like _"company"_ or _"website"_, something that looks normal for your type of form but isn’t actually needed.
-
-<NewsletterForm client:visible />
 
 ### Hide a parent container, not the field itself
 

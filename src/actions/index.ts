@@ -1,115 +1,13 @@
-import { newsletterFormSchema, contactFormSchema } from "@/lib/definitions";
+import { contactFormSchema } from "@/lib/definitions";
 import { resend } from "@/lib/resend";
-import { createSignedToken } from "@/lib/token";
 import { parseSubmission, report } from "@conform-to/react/future";
-import { track } from "@vercel/analytics/server";
 import { defineAction } from "astro:actions";
-import NewsletterVerificationEmail, {
-  PlainText,
-} from "@/components/react/emails/newsletter-verification";
 import { z } from "astro/zod";
 import { eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { viewCount } from "@/db/schema";
-import { RESEND_NEWSLETTER_AUDIENCE_ID } from "@/consts";
 
 export const server = {
-  newsletter: defineAction({
-    accept: "form",
-    handler: async (formData, ctx) => {
-      const {
-        request: { headers, url },
-      } = ctx;
-      const { origin } = new URL(url);
-
-      const submission = parseSubmission(formData);
-      const result = newsletterFormSchema.safeParse(submission.payload);
-
-      if (!result.success) {
-        return {
-          result: report(submission, {
-            error: {
-              issues: result.error.issues,
-            },
-          }),
-        };
-      }
-
-      const { email, company: honeypot } = result.data;
-
-      if (honeypot !== undefined) {
-        await track("honeypot-triggered", {
-          form: "newsletter-signup",
-          input: honeypot,
-        });
-        return {
-          result: report(submission, { reset: true }),
-        };
-      }
-
-      const { data: contact } = await resend.contacts.get({
-        email,
-        audienceId: RESEND_NEWSLETTER_AUDIENCE_ID,
-      });
-
-      if (contact) {
-        return {
-          result: report(submission, {
-            error: {
-              formErrors: ["You are already subscribed to the newsletter."],
-            },
-          }),
-        };
-      }
-
-      const token = createSignedToken(email);
-      const confirmationLink = `${origin}/api/newsletter/verification?token=${token}`;
-
-      const { error } = await resend.emails.send({
-        from: "Nikolai Lehbrink <mail@nikolailehbr.ink>",
-        to: [import.meta.env.DEV ? "delivered@resend.dev" : email],
-        subject: "Confirm your newsletter subscription",
-        tags: [
-          {
-            name: "category",
-            value: "newsletter-form",
-          },
-        ],
-        text: PlainText({
-          confirmationLink,
-        }),
-        react: NewsletterVerificationEmail({
-          confirmationLink,
-        }),
-      });
-
-      if (error) {
-        console.error("Error sending confirmation email:", error);
-        return {
-          result: report(submission, {
-            error: {
-              formErrors: [
-                "There was an error sending the confirmation email. Please try again later.",
-              ],
-            },
-          }),
-        };
-      }
-
-      const referrer = headers.get("referer");
-      const referrerPath = referrer ? new URL(referrer).pathname : null;
-
-      await track("newsletter-signup", {
-        email,
-        path: referrerPath,
-      });
-
-      return {
-        result: report(submission, { reset: true }),
-        success: true,
-      };
-    },
-  }),
   contact: defineAction({
     accept: "form",
     handler: async (formData) => {
@@ -136,10 +34,6 @@ export const server = {
       } = result.data;
 
       if (honeypot !== undefined) {
-        await track("honeypot-triggered", {
-          form: "contact",
-          input: honeypot,
-        });
         return {
           result: report(submission, {
             reset: true,
