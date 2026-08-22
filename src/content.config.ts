@@ -26,7 +26,7 @@ const blog = defineCollection({
         authors: z.array(reference("authors")).default([
           {
             collection: "authors",
-            id: "nikolailehbrink",
+            id: "MohsenDastaran",
           },
         ]),
       })

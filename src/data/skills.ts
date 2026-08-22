@@ -12,6 +12,10 @@ import Copilot from "@/assets/skills/copilot.svg";
 import CSS from "@/assets/skills/css.svg";
 import HTML from "@/assets/skills/html.svg";
 import React from "@/assets/skills/react.svg";
+import Vue from "@/assets/skills/vue.svg";
+import Nuxt from "@/assets/skills/nuxt.svg";
+import Rust from "@/assets/skills/rust.svg";
+import Cursor from "@/assets/skills/cursor.svg";
 import GitHub from "@/assets/skills/github.svg";
 import Nextjs from "@/assets/skills/nextjs.svg";
 import Remix from "@/assets/skills/remix.svg";
@@ -44,7 +48,7 @@ export const SKILLS = {
       url: "https://www.typescriptlang.org",
     },
     {
-      name: "Tailwind CSS",
+      name: "Tailwind",
       logo: TailwindCSS,
       url: "https://tailwindcss.com",
     },
@@ -54,14 +58,14 @@ export const SKILLS = {
       url: "https://react.dev",
     },
     {
-      name: "React Router",
-      logo: ReactRouter,
-      url: "https://reactrouter.com",
+      name: "Vue.js",
+      logo: Vue,
+      url: "https://vuejs.org",
     },
     {
-      name: "Remix",
-      logo: Remix,
-      url: "https://remix.run",
+      name: "Nuxt.js",
+      logo: Nuxt,
+      url: "https://nuxt.com",
     },
     {
       name: "Next.js",
@@ -76,43 +80,28 @@ export const SKILLS = {
       url: "https://nodejs.org",
     },
     {
-      name: "Deno",
-      logo: Deno,
-      url: "https://deno.land",
-    },
-    {
-      name: "PHP",
-      logo: PHP,
-      url: "https://www.php.net",
+      name: "Actix-web(Rust)",
+      logo: Rust,
+      url: "https://actix.rs",
     },
   ],
-  Design: [
+  Desktop: [
     {
-      name: "Figma",
-      logo: Figma,
-      url: "https://www.figma.com",
-    },
-    {
-      name: "Creative Cloud",
-      logo: CreativeCloud,
-      url: "https://www.adobe.com/creativecloud.html",
+      name: "Tauri",
+      logo: Rust,
+      url: "https://tauri.app",
     },
   ],
-  CMS: [
+  Mobile: [
     {
-      name: "WordPress",
-      logo: Wordpress,
-      url: "https://wordpress.org",
+      name: "React Native",
+      logo: React,
+      url: "https://reactnative.dev",
     },
     {
-      name: "Payload",
-      logo: Payload,
-      url: "https://payloadcms.com",
-    },
-    {
-      name: "Sanity",
-      logo: Sanity,
-      url: "https://www.sanity.io",
+      name: "Tauri",
+      logo: Rust,
+      url: "https://tauri.app",
     },
   ],
   Tools: [
@@ -122,14 +111,14 @@ export const SKILLS = {
       url: "https://code.visualstudio.com",
     },
     {
+      name: "Cursor",
+      logo: Cursor,
+      url: "https://cursor.com",
+    },
+    {
       name: "Claude Code",
       logo: Claude,
       url: "https://claude.com/product/claude-code",
-    },
-    {
-      name: "Vite",
-      logo: Vite,
-      url: "https://vite.dev",
     },
     {
       name: "GitHub Copilot",
@@ -140,6 +129,16 @@ export const SKILLS = {
       name: "GitHub",
       logo: GitHub,
       url: "https://github.com",
+    },
+    {
+      name: "Figma",
+      logo: Figma,
+      url: "https://www.figma.com",
+    },
+    {
+      name: "Vite",
+      logo: Vite,
+      url: "https://vite.dev",
     },
   ],
 } as const;

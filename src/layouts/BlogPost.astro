@@ -58,7 +58,7 @@ const coverImageURL = new URL(cover ? cover.src : "og.png", href).href;
 // otherwise inline a Person for the guest author.
 const primaryAuthor = authors[0];
 const authorNode =
-  primaryAuthor.id === "nikolailehbrink"
+  primaryAuthor.id === "MohsenDastaran"
     ? personRef(origin)
     : { "@type": "Person" as const, name: primaryAuthor.data.name };
 

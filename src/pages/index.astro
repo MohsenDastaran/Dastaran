@@ -53,23 +53,17 @@ const educationExperiences = career.filter(
       <DastaranLogo client:load />
     </div>
     <div class="z-10 space-y-6 fade-in sm:text-center">
-      <h1
-        class="animate-in text-4xl font-bold tracking-tight duration-1000
-          slide-in-from-bottom-40 sm:zoom-in-80"
-      >
-        Dastaran
-      </h1>
       <p
         class="max-w-prose animate-in text-pretty text-muted-foreground
           duration-1000 slide-in-from-bottom-30 fade-in sm:text-lg
           sm:slide-in-from-bottom-40"
       >
-        I am a <b class="text-foreground">Full Stack Developer</b> and mostly{
-          " "
-        }
-        <b class="text-foreground">Frontend Engineer</b> with a passion for building
-        web applications based in Munich. I enjoy learning new things and sharing
-        my knowledge with others.
+        A collection of <b class="text-foreground">
+          web, mobile, and desktop projects
+        </b> exploring innovative solutions in analytics, user engagement, and digital
+        experiences. Each brings a fresh perspective to <b
+          class="text-foreground">real problems worth solving.</b
+        >
       </p>
     </div>
     <div
@@ -154,7 +148,7 @@ const educationExperiences = career.filter(
                 ))}
               </ul>
               <div
-                class="absolute -inset-x-[3px] -bottom-[3px] z-30 flex
+                class="absolute -inset-x-0.75 -bottom-0.75 z-30 flex
                   justify-center rounded-xl bg-linear-to-b from-transparent
                   to-background pt-12 pb-4"
               >
@@ -168,19 +162,19 @@ const educationExperiences = career.filter(
         }
       </div>
     </div>
-    <div class="grid w-full grid-cols-1 gap-12 lg:grid-cols-2">
+    <div class="flex w-full flex-row justify-center gap-12">
       <div class="flex max-w-2xl flex-col gap-2">
         <h2 class="flex items-center gap-1 text-2xl font-bold">
           <KanbanIcon size={28} weight="duotone" />
           Skills
         </h2>
         <p class="mb-3 max-w-prose text-muted-foreground">
-          I have a diverse skill set that includes frontend and backend
-          development, design, and project management. I am always eager to
-          learn new technologies and improve my skills. Here are some that I
-          have acquired over the years.
+          Our projects leverage a diverse skill set spanning frontend and
+          backend development, design, and project management. We're constantly
+          exploring new technologies and refining our approach. Here's our
+          evolving toolkit.
         </p>
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap justify-center gap-4">
           {
             Object.entries(SKILLS).map(([category, skillSet]) => {
               return (
@@ -221,7 +215,7 @@ const educationExperiences = career.filter(
           }
         </div>
       </div>
-      <div class="flex flex-col gap-2">
+      <!-- <div class="flex flex-col gap-2">
         <h2 class="flex items-center gap-1 text-2xl font-bold">
           <StudentIcon size={28} weight="duotone" />
           Work and Education
@@ -243,7 +237,7 @@ const educationExperiences = career.filter(
             })
           }
         </div>
-      </div>
+      </div> -->
     </div>
     <section class="@container flex w-full flex-col gap-2 lg:max-w-3xl">
       <h2 class="flex items-center gap-1 text-2xl font-bold">

@@ -12,7 +12,7 @@ type SocialProfile = {
 export const SOCIAL_LINKS = [
   {
     name: "GitHub",
-    href: "https://github.com/nikolailehbrink",
+    href: "https://github.com/MohsenDastaran",
     logo: GithubLogoIcon,
   },
   {
@@ -22,7 +22,7 @@ export const SOCIAL_LINKS = [
   },
   {
     name: "X",
-    href: "https://x.com/nikolailehbrink",
+    href: "https://x.com/Mohsen_Dastaran",
     logo: XLogoIcon,
   },
 ] as const satisfies Array<SocialProfile>;
