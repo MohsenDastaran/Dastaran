@@ -21,7 +21,7 @@ import { getLastmodMap } from "./src/lib/sitemap";
 // Built once and reused for every sitemap entry rather than per call.
 const lastmodMap = getLastmodMap();
 
-const site = "https://www.nikolailehbr.ink/";
+const site = "https://www.dastaran.com/";
 
 export default defineConfig({
   markdown: {

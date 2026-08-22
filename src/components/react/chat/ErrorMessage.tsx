@@ -7,7 +7,7 @@ export default function ErrorMessage() {
       <p className="text-red-600 dark:text-red-400">
         I am sorry, but there is currently an error on my end or you are out of
         messages. Try to reload the message next to the text field or{" "}
-        <a href="mailto:mail@nikolailehbr.ink" className="underline">
+        <a href="mailto:mohsen.dastaran@gmail.com" className="underline">
           chat with the real me
         </a>
         .

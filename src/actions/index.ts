@@ -42,12 +42,12 @@ export const server = {
       }
 
       const { error } = await resend.emails.send({
-        from: "Kontaktformular <contact-form@nikolailehbr.ink>",
+        from: "Kontaktformular <contact-form@dastaran.com>",
         replyTo: email,
         to: [
           import.meta.env.DEV
             ? "delivered@resend.dev"
-            : "mail@nikolailehbr.ink",
+            : "mohsen.dastaran@gmail.com",
         ],
         subject: subject ?? "New inquiry",
         html: `

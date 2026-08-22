@@ -85,7 +85,7 @@ I would like to point out that data transmission over the Internet (e.g., when c
 Dastaran - Conception, Design and Development
 
 Phone: 00491794393782
-Email: [mail@nikolailehbr.ink](mailto:mail@nikolailehbr.ink)
+Email: [mohsen.dastaran@gmail.com](mailto:mohsen.dastaran@gmail.com)
 
 The responsible entity is the natural or legal person who alone or jointly with others determines the purposes and means of the processing of personal data (e.g., names, email addresses, etc.).
 

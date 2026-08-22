@@ -9,7 +9,7 @@ export default {
   endingPosition: "absolute",
   plugins: [
     "prettier-plugin-astro",
-    // https://www.nikolailehbr.ink/blog/tailwind-css-tips#Automatic-wrapping-of-long-class-names
+    // https://www.dastaran.com/blog/tailwind-css-tips#Automatic-wrapping-of-long-class-names
     "prettier-plugin-tailwindcss",
     "prettier-plugin-classnames",
     "prettier-plugin-merge",

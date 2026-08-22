@@ -2,12 +2,12 @@
   "name": "portfolio-website",
   "version": "3.0.0",
   "description": "Personal portfolio website including a blog, an interactive AI chatbot and insights into my professional work.",
-  "homepage": "https://www.nikolailehbr.ink/",
+  "homepage": "https://www.dastaran.com/",
   "bugs": {
-    "email": "mail@nikolailehbr.ink",
+    "email": "mohsen.dastaran@gmail.com",
     "url": "https://github.com/MohsenDastaran/Dastaran/issues"
   },
-  "author": "Dastaran <mail@nikolailehbr.ink> (https://www.nikolailehbr.ink/)",
+  "author": "Dastaran <mohsen.dastaran@gmail.com> (https://www.mohsen.dastaran.com/)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MohsenDastaran/Dastaran.git"

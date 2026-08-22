@@ -47,7 +47,7 @@ export function personSchema(origin: string): WithContext<Person> {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "Inquiries",
-      email: "mail@nikolailehbr.ink",
+      email: "mohsen.dastaran@gmail.com",
     },
   };
 }

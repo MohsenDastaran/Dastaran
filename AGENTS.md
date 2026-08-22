@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Personal portfolio website (https://www.nikolailehbr.ink/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog with MDX, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
+Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog with MDX, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
 
 ## Commands
 
