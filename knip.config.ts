@@ -9,5 +9,4 @@ export default {
   ignoreFiles: ["src/layouts/LegalLayout.astro"],
   // @typescript-eslint/parser is used to make ESLint VSCode Extension work in Astro files: https://github.com/ota-meshi/eslint-plugin-astro?tab=readme-ov-file#-installation
   ignoreDependencies: ["@typescript-eslint/parser"],
-  commitlint: true,
 } satisfies KnipConfig;

@@ -1,4 +1,0 @@
-set -e
-pnpm test
-pnpm knip
-pnpm lint

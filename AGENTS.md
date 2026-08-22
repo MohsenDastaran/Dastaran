@@ -12,12 +12,6 @@ Personal portfolio website (https://www.nikolailehbr.ink/) built with Astro 7, R
 - **Test:** `pnpm test` (Vitest, runs in watch mode)
 - **Unused deps:** `pnpm knip`
 
-## Git Workflow
-
-- **Conventional commits** enforced via commitlint (`feat:`, `fix:`, `docs:`, etc.)
-- **Pre-commit hook** runs lint-staged: ESLint + Prettier on staged `*.{js,jsx,ts,tsx,astro,json,svg,mdx}` files
-- **Commit-msg hook** validates commit message format
-
 ## Architecture
 
 ### Content System

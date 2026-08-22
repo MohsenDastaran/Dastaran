@@ -23,8 +23,6 @@
     "knip": "knip",
     "lint": "eslint",
     "lint:inspect": "eslint --inspect-config",
-    "lint:staged": "lint-staged",
-    "prepare": "husky",
     "test": "vitest",
     "preview": "dotenv astro preview"
   },
@@ -66,8 +64,6 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "21.0.2",
-    "@commitlint/types": "21.0.1",
     "@eslint/compat": "2.1.0",
     "@eslint/js": "10.0.1",
     "@types/node": "24.12.4",
@@ -79,9 +75,7 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.6.0",
-    "husky": "9.1.7",
     "knip": "6.15.0",
-    "lint-staged": "17.0.7",
     "prettier": "3.8.3",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-classnames": "0.10.1",
