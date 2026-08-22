@@ -1,0 +1,219 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import RootLayout from "@/layouts/RootLayout.astro";
+import { getBlogTags, getPosts } from "@/lib/posts";
+import NewsletterForm from "@/components/react/NewsletterForm";
+import PostTeaser from "@/components/PostTeaser.astro";
+import { track } from "@vercel/analytics/server";
+import { badgeVariants } from "@/components/react/ui/badge";
+import { cn } from "@/lib/utils";
+import Schema from "@/components/Schema.astro";
+import { breadcrumbSchema, personRef, websiteRef } from "@/lib/schema";
+import { getEntries } from "astro:content";
+import type { BlogPosting } from "schema-dts";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass";
+
+export const prerender = false;
+
+const title = "Blog | Nikolai Lehbrink";
+const description =
+  "A collection of my thoughts, ideas and experiences. I write about various topics, including web development, technology and personal topics.";
+
+const { searchParams, origin } = Astro.url;
+const tag = searchParams.get("tag");
+
+const tags = await getBlogTags();
+const filteredTag = tags.find(({ slug }) => slug === tag);
+
+const posts = await getPosts({ tag: filteredTag?.name });
+
+const schemaPosts = await Promise.all(
+  posts.map(async ({ data, id: slug }) => {
+    const authors = await getEntries(data.authors);
+    // Trailing slash to match the post page's canonical URL (`Astro.url.href`),
+    // so the `@id` below is byte-identical and the two BlogPosting nodes
+    // dedupe into one entity instead of two.
+    const postUrl = `${origin}/blog/${slug}/`;
+
+    return {
+      "@type": "BlogPosting",
+      // Same `@id` as the actual post page, so the two references resolve to a
+      // single entity in the knowledge graph rather than duplicating it.
+      "@id": `${postUrl}#article`,
+      url: postUrl,
+      mainEntityOfPage: { "@id": postUrl },
+      headline: data.title,
+      description: data.description,
+      // Same image the post page exposes (cover, else the generated OG image),
+      // so each listing node is a complete BlogPosting on its own.
+      image: data.cover
+        ? new URL(data.cover.src, origin).href
+        : `${postUrl}og.png`,
+      datePublished: data.publicationDate.toISOString(),
+      dateModified: (
+        data.modificationDate ?? data.publicationDate
+      ).toISOString(),
+      author:
+        authors[0].id === "nikolailehbrink"
+          ? personRef(origin)
+          : { "@type": "Person", name: authors[0].data.name },
+      keywords: data.tags?.join(", "),
+    } satisfies BlogPosting;
+  }),
+);
+
+if (filteredTag) {
+  await track("blog-tag-filtered", { tag: filteredTag.name });
+}
+const hasFilteredTag = filteredTag !== undefined;
+---
+
+<RootLayout>
+  <BaseHead title="Blog" description={description} slot="head">
+    <Schema
+      item={{
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "@id": `${origin}/blog#blog`,
+        url: `${origin}/blog`,
+        name: title,
+        description,
+        inLanguage: "en",
+        isPartOf: websiteRef(origin),
+        publisher: personRef(origin),
+        blogPost: schemaPosts,
+      }}
+    />
+    <Schema
+      item={breadcrumbSchema(origin, [
+        { name: "Home", url: "/" },
+        { name: "Blog", url: "/blog" },
+      ])}
+    />
+  </BaseHead>
+  <div class="flex flex-col gap-4 sm:items-center">
+    <h1 class="text-3xl font-bold sm:text-center sm:text-4xl">Blog</h1>
+    <p class="max-w-prose text-muted-foreground sm:text-center">
+      {description}
+    </p>
+    <NewsletterForm client:visible showText={false} className="max-w-2xl" />
+    <div class="relative mt-4 w-full max-w-xl">
+      <MagnifyingGlassIcon
+        size={20}
+        weight="duotone"
+        className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2
+          text-muted-foreground"
+      />
+      <input
+        id="blog-search"
+        type="search"
+        autocomplete="off"
+        placeholder="Search posts..."
+        aria-label="Search blog posts"
+        class="w-full rounded-lg border border-border bg-card py-2 pr-3 pl-10
+          text-sm offset-border placeholder:text-muted-foreground
+          focus-visible:border-ring focus-visible:ring-2
+          focus-visible:ring-ring/50 focus-visible:outline-none"
+      />
+    </div>
+    <div
+      class="relative grid max-w-xl overflow-hidden rounded-lg border
+        border-border bg-card offset-border"
+    >
+      <div
+        class="absolute inset-y-0 right-0 w-2 rounded-e-lg bg-linear-to-r
+          from-transparent to-card"
+      >
+      </div>
+      <form class="flex snap-x snap-mandatory gap-2 overflow-x-auto p-2">
+        <a
+          href="/blog/"
+          class={cn(
+            "cursor-pointer snap-end scroll-mr-2",
+            badgeVariants({
+              variant: hasFilteredTag ? "secondary" : "default",
+            }),
+          )}
+          data-astro-prefetch>All</a
+        >
+        {
+          tags.map(({ name, slug }) => {
+            const isActive = filteredTag?.slug === slug;
+            return (
+              <button
+                {...(!isActive ? { name: "tag", value: slug } : {})}
+                class={cn(
+                  "cursor-pointer snap-end scroll-mr-2",
+                  badgeVariants({
+                    variant: isActive ? "default" : "secondary",
+                  }),
+                )}
+                type="submit"
+              >
+                {name}
+              </button>
+            );
+          })
+        }
+      </form>
+    </div>
+    <ul
+      id="blog-list"
+      class="mt-2 grid grid-cols-1 gap-4 rounded-md md:grid-cols-2 lg:max-w-5xl"
+    >
+      {
+        posts.length > 0 ? (
+          posts.map(({ data, id, readingTime }) => (
+            <PostTeaser
+              post={{
+                ...data,
+                slug: id,
+                readingTime,
+              }}
+            />
+          ))
+        ) : (
+          <p
+            class="col-span-2 rounded-lg bg-card p-4 py-3 text-center
+              text-muted-foreground"
+          >
+            No posts were found {filteredTag ? `for ${filteredTag.name}.` : "."}{" "}
+            <br />
+          </p>
+        )
+      }
+    </ul>
+    <p
+      id="blog-search-empty"
+      class="hidden rounded-lg bg-card p-4 py-3 text-center
+        text-muted-foreground"
+    >
+      No posts match your search.
+    </p>
+  </div>
+</RootLayout>
+
+<script>
+  const input = document.getElementById(
+    "blog-search",
+  ) as HTMLInputElement | null;
+  const list = document.getElementById("blog-list");
+  const empty = document.getElementById("blog-search-empty");
+
+  input?.addEventListener("input", () => {
+    const terms = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    let visibleCount = 0;
+
+    list?.querySelectorAll<HTMLElement>("[data-search]").forEach((item) => {
+      const haystack = item.dataset.search ?? "";
+      const isMatch = terms.every((term) => haystack.includes(term));
+      item.classList.toggle("hidden", !isMatch);
+      if (isMatch) {
+        visibleCount++;
+      }
+    });
+
+    // Only surface the empty state while actively searching.
+    empty?.classList.toggle("hidden", terms.length === 0 || visibleCount > 0);
+  });
+</script>

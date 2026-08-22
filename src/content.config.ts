@@ -1,0 +1,114 @@
+import { defineCollection, reference } from "astro:content";
+import { file, glob } from "astro/loaders";
+import { generateBlogId } from "./lib/utils";
+import { z } from "astro/zod";
+
+const blog = defineCollection({
+  // Load Markdown and MDX files in the `src/content/blog/` directory.
+  loader: glob({
+    base: "./src/content/blog",
+    pattern: "**/*.{md,mdx}",
+    // TODO: This function needs enhancement and tests. Having two articles in one folder without a "_" results in unexpected id generation etc.
+    generateId: ({ entry }) => generateBlogId(entry),
+  }),
+  // Type-check frontmatter using a schema
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        draft: z.boolean().default(false),
+        publicationDate: z.coerce.date(),
+        modificationDate: z.coerce.date().optional(),
+        cover: image().optional(),
+        tags: z.array(z.string().min(1)).optional(),
+        showComments: z.boolean().default(true),
+        authors: z.array(reference("authors")).default([
+          {
+            collection: "authors",
+            id: "nikolailehbrink",
+          },
+        ]),
+      })
+      .strict(),
+});
+
+const authors = defineCollection({
+  loader: file("src/data/authors.json"),
+  schema: ({ image }) =>
+    z
+      .object({
+        name: z.string(),
+        image: image().optional(),
+        email: z.email().optional(),
+        x: z
+          .url()
+          .refine((arg) => arg.includes("x.com"), {
+            message: "URL must contain x.com",
+          })
+          .optional(),
+        github: z
+          .url()
+          .refine((arg) => arg.includes("github.com"), {
+            message: "URL must contain github.com",
+          })
+          .optional(),
+        linkedin: z
+          .url()
+          .refine((arg) => arg.includes("linkedin.com"), {
+            message: "URL must contain linkedin.com",
+          })
+          .optional(),
+      })
+      .strict(),
+});
+
+const career = defineCollection({
+  loader: file("src/data/career.json"),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        startDate: z.coerce.date(),
+        endDate: z.coerce.date().optional(),
+        logo: image(),
+        website: z.url().optional(),
+        type: z.enum(["work", "education"]),
+      })
+      .strict(),
+});
+
+const projects = defineCollection({
+  loader: file("src/data/projects.json"),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string(),
+        description: z.string(),
+        image: image(),
+        link: z.url().optional(),
+        github: z.url().optional(),
+        tags: z.array(z.string().min(1)),
+      })
+      .strict(),
+});
+
+const thoughts = defineCollection({
+  loader: glob({
+    base: "./src/content/thoughts",
+    pattern: "**/thought.mdx",
+    generateId({ entry }) {
+      return entry.split("/")[0];
+    },
+  }),
+  schema: z
+    .object({
+      title: z.string(),
+      description: z.string(),
+      publicationDate: z.coerce.date(),
+    })
+    .strict(),
+});
+
+export const collections = { blog, authors, career, projects, thoughts };

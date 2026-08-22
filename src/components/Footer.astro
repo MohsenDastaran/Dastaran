@@ -1,0 +1,65 @@
+---
+import LEGAL_PAGES from "@/data/legal-pages.json";
+import { SOCIAL_LINKS } from "@/data/socials";
+import { cn } from "@/lib/utils";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"footer">;
+
+const { class: className, ...props } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+  class={cn(
+    "relative border-1 border-border bg-card p-3 text-sm md:p-2",
+    className,
+  )}
+  {...props}
+>
+  <div
+    class="relative container flex flex-wrap items-center justify-between gap-3
+      max-sm:flex-col"
+  >
+    <p class="flex-1 max-sm:order-2">
+      <span class="text-muted-foreground"> Copyright © {currentYear} </span>
+      <span class="text-muted-foreground"> - </span>
+      Nikolai Lehbrink
+    </p>
+    <nav
+      aria-label="Social links"
+      class="rounded-full border border-border bg-muted px-2 py-1.5"
+    >
+      <menu class="flex gap-2">
+        {
+          SOCIAL_LINKS.map(({ href, name, logo: Logo }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={name}
+              class="text-muted-foreground hover:text-foreground"
+            >
+              <Logo size={20} weight="duotone" />
+            </a>
+          ))
+        }
+      </menu>
+    </nav>
+    <nav aria-label="Legal" class="flex flex-1 justify-end">
+      <menu class="flex gap-2">
+        {
+          LEGAL_PAGES.map(({ href, name }) => (
+            <a
+              href={href}
+              class="text-muted-foreground hover:text-foreground"
+              data-astro-prefetch
+            >
+              {name}
+            </a>
+          ))
+        }
+      </menu>
+    </nav>
+  </div>
+</footer>

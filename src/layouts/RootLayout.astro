@@ -1,0 +1,109 @@
+---
+import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import BaseHead from "@/components/BaseHead.astro";
+import { SITE_DESCRIPTION, SITE_TITLE, THEME_COLOR } from "@/consts";
+import Analytics from "@vercel/analytics/astro";
+import "../styles/global.css";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import Schema from "@/components/Schema.astro";
+import { personSchema, websiteSchema } from "@/lib/schema";
+import { getCanonicalUrl } from "@/lib/utils";
+
+const { pathname, origin } = Astro.url;
+const isChatPage = pathname.startsWith("/chat");
+const isHomePage = pathname === "/";
+
+const canonicalURL = getCanonicalUrl(pathname, Astro.site);
+---
+
+<html
+  lang="en"
+  class="scroll-pt-20 scroll-smooth text-pretty scheme-light dark:scheme-dark"
+>
+  <head>
+    <script is:inline>
+      document.documentElement.classList.toggle(
+        "dark",
+        localStorage.theme === "dark" ||
+          (!("theme" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches),
+      );
+      document.documentElement.setAttribute(
+        "data-theme",
+        "theme" in localStorage ? localStorage.theme : "system",
+      );
+    </script>
+    <!-- Global Metadata -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content={THEME_COLOR} />
+
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE_TITLE}
+      href={new URL("rss.xml", Astro.site)}
+    />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Font preloads -->
+    <link
+      rel="preload"
+      href={interLatin}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Site-wide entity graph (Person + WebSite), referenced by `@id` from
+         page-level schemas like BlogPosting so search engines and LLMs can
+         connect every page to a single author/site entity. -->
+    <Schema item={personSchema(origin)} />
+    <Schema item={websiteSchema(origin)} />
+
+    <slot name="head">
+      <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    </slot>
+
+    <!-- Vercel Analytics -->
+    <!-- Has to come last, because otherwise it would trigger the next tags coming in the body..?! The fuck: https://stackoverflow.com/questions/21643740/head-tags-are-appearing-inside-body  -->
+    <Analytics />
+  </head>
+  <body class="font-sans">
+    <a
+      href="#main-content"
+      class="sr-only rounded-md bg-card px-4 py-2 text-foreground offset-border
+        focus:not-sr-only focus:absolute focus:start-4 focus:top-4 focus:z-50
+        focus:border"
+    >
+      Skip to content
+    </a>
+    <div
+      class:list={[
+        "flex flex-col bg-background text-foreground",
+        !isChatPage ? "min-h-dvh" : "h-dvh",
+        isChatPage || isHomePage ? "pattern-neutral-400/5" : undefined,
+      ]}
+    >
+      <Navbar />
+      <main
+        id="main-content"
+        class:list={[
+          "container flex grow justify-center",
+          isChatPage ? "overflow-hidden max-sm:pr-0" : "py-8 sm:py-12",
+        ]}
+      >
+        <slot />
+      </main>
+      <Footer class:list={isChatPage ? "max-sm:hidden" : undefined} />
+    </div>
+  </body>
+</html>

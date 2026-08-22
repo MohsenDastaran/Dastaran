@@ -1,0 +1,91 @@
+---
+import { formatDate } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import type { CollectionEntry } from "astro:content";
+import type { HTMLAttributes } from "astro/types";
+import { Badge, badgeVariants } from "./react/ui/badge";
+import { PencilIcon } from "@phosphor-icons/react/dist/ssr/Pencil";
+import { CalendarDotsIcon } from "@phosphor-icons/react/dist/ssr/CalendarDots";
+import { ClockCountdownIcon } from "@phosphor-icons/react/dist/ssr/ClockCountdown";
+
+type Props = HTMLAttributes<"li"> & {
+  post: CollectionEntry<"blog">["data"] & {
+    readingTime: number;
+    slug: string;
+  };
+};
+
+const {
+  post: { title, description, publicationDate, readingTime, draft, slug, tags },
+  class: className,
+  ...props
+} = Astro.props;
+
+// Lowercased haystack consumed by the inline blog search on /blog.
+const searchIndex = [title, description, ...(tags ?? [])]
+  .join(" ")
+  .toLowerCase();
+
+const DATE_TIME_FORMAT_OPTIONS = {
+  year: "numeric",
+  day: "2-digit",
+  month: "short",
+} satisfies Intl.DateTimeFormatOptions;
+
+const formattedPublicationDate = formatDate(
+  publicationDate,
+  DATE_TIME_FORMAT_OPTIONS,
+);
+---
+
+<li
+  data-search={searchIndex}
+  class={cn(
+    `group relative flex flex-col rounded-lg border bg-card offset-border
+    transition-colors hover:bg-muted`,
+    className,
+  )}
+  {...props}
+>
+  <a class="absolute inset-0 z-20" href={`/blog/${slug}/`} data-astro-prefetch>
+    <span class="sr-only">Link to article</span>
+  </a>
+  <div
+    class="z-10 flex flex-col gap-3 rounded-lg border-border p-4 hover:bg-muted"
+  >
+    <div class="flex gap-2 text-xs text-muted-foreground">
+      {
+        draft && (
+          <Badge
+            className="bg-orange-500/20 text-orange-600 dark:text-orange-400"
+          >
+            <PencilIcon size={16} weight="duotone" />
+            Draft
+          </Badge>
+        )
+      }
+      <time
+        class={cn(
+          badgeVariants(),
+          "bg-sky-500/20 text-sky-600 dark:text-sky-400",
+        )}
+        datetime={publicationDate.toISOString()}
+      >
+        <CalendarDotsIcon size={16} weight="duotone" />
+        {formattedPublicationDate}
+      </time>
+      {
+        readingTime > 0 ? (
+          <Badge variant="secondary">
+            <ClockCountdownIcon size={16} weight="duotone" />
+            {readingTime} min read
+          </Badge>
+        ) : null
+      }
+    </div>
+    <h2 class="text-xl font-bold">{title}</h2>
+    <p class="line-clamp-2 text-sm text-muted-foreground">
+      {description}
+    </p>
+  </div>
+</li>
