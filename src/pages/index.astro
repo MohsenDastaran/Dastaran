@@ -4,7 +4,7 @@ import ProjectTeaser from "@/components/ProjectTeaser.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
 import { getCollection } from "astro:content";
 import { SKILLS } from "@/data/skills";
-import Avatar from "@/components/Avatar.astro";
+import DastaranLogo from "@/components/react/DastaranLogo";
 import { cn } from "@/lib/utils";
 import { ProjectorScreenChartIcon } from "@phosphor-icons/react/dist/ssr/ProjectorScreenChart";
 import { ArticleNyTimesIcon } from "@phosphor-icons/react/dist/ssr/ArticleNyTimes";
@@ -50,12 +50,7 @@ const educationExperiences = career.filter(
           duration-[2s] zoom-in-80"
       >
       </div>
-      <div
-        class="absolute -inset-0.5 rounded-2xl bg-linear-to-br from-amber-600
-          via-sky-600 to-sky-400"
-      >
-      </div>
-      <Avatar loading="eager" class="relative size-24 rounded-xl sm:size-40" />
+      <DastaranLogo client:load />
     </div>
     <div class="z-10 space-y-6 fade-in sm:text-center">
       <h1
