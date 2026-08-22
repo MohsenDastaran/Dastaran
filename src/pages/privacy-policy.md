@@ -82,7 +82,7 @@ I would like to point out that data transmission over the Internet (e.g., when c
 
 **The responsible entity for data processing on this website is:**
 
-Nikolai Lehbrink - Conception, Design and Development
+Dastaran - Conception, Design and Development
 
 Phone: 00491794393782
 Email: [mail@nikolailehbr.ink](mailto:mail@nikolailehbr.ink)

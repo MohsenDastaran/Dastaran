@@ -5,12 +5,12 @@
   "homepage": "https://www.nikolailehbr.ink/",
   "bugs": {
     "email": "mail@nikolailehbr.ink",
-    "url": "https://github.com/nikolailehbrink/portfolio/issues"
+    "url": "https://github.com/MohsenDastaran/Dastaran/issues"
   },
-  "author": "Nikolai Lehbrink <mail@nikolailehbr.ink> (https://www.nikolailehbr.ink/)",
+  "author": "Dastaran <mail@nikolailehbr.ink> (https://www.nikolailehbr.ink/)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nikolailehbrink/portfolio.git"
+    "url": "git+https://github.com/MohsenDastaran/Dastaran.git"
   },
   "scripts": {
     "astro": "astro",

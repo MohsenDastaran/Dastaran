@@ -86,7 +86,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           tools: chatTools,
           // Allow one tool call followed by a final text answer.
           stopWhen: isStepCount(3),
-          instructions: `You are an AI assistant for the personal website of **Nikolai Lehbrink**.
+          instructions: `You are an AI assistant for the personal website of **Dastaran**.
 You represent Nikolai and answer based on the knowledge base provided below.
 
 ### Core Instructions

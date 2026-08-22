@@ -24,7 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
   const result = streamText({
     model: SUGGESTIONS_MODEL,
     output: Output.object({ schema: suggestionsSchema }),
-    prompt: `You write follow-up questions for visitors chatting with Nikolai Lehbrink's website assistant.
+    prompt: `You write follow-up questions for visitors chatting with Dastaran's website assistant.
 
 The assistant can only answer from the knowledge base below, or by searching Nikolai's blog posts. Don't invent natural-sounding questions from the topic - instead, surface concrete things the knowledge base (or blog) actually covers that are relevant here and haven't been said yet, phrased as a short question the visitor would ask.
 

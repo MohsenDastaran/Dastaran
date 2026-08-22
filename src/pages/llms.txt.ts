@@ -21,7 +21,7 @@ export const GET: APIRoute = async ({ url }) => {
 
 > ${SITE_DESCRIPTION}
 
-Personal portfolio and technical blog by Nikolai Lehbrink, a Full Stack Developer and Frontend Engineer based in Munich. The blog covers web development with a focus on Astro, React, TypeScript, and Tailwind CSS.
+Personal portfolio and technical blog by Dastaran, a Full Stack Developer and Frontend Engineer based in Munich. The blog covers web development with a focus on Astro, React, TypeScript, and Tailwind CSS.
 
 ## Blog posts
 

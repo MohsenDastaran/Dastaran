@@ -12,7 +12,7 @@ _Last updated: 05 June 2025_
 
 This website is operated by:
 
-**Nikolai Lehbrink – Conception, Design and Development**  
+**Dastaran – Conception, Design and Development**  
 Munich, Bavaria  
 Germany  
 Email: [mail@nikolailehbr.ink](mailto:mail@nikolailehbr.ink)  
@@ -22,7 +22,7 @@ Phone: +49 (0) 179 4393782
 
 ## Responsible for Content
 
-According to Section 5 of TMG, I, Nikolai Lehbrink, am responsible for the content on this website (address as above).
+According to Section 5 of TMG, I, Dastaran, am responsible for the content on this website (address as above).
 
 ---
 

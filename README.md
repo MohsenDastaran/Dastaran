@@ -3,7 +3,7 @@
 Source code for my personal portfolio website. The site showcases my projects and gives an insight into my background, my passion for web development and design, and the technologies I work with.
 
 <a href="https://www.nikolailehbr.ink">
-  <img alt="Personal portfolio website of Nikolai Lehbrink" src="src/assets/og/home.webp">
+  <img alt="Personal portfolio website of Dastaran" src="src/assets/og/home.webp">
 </a>
 
 ## ✨ Features
@@ -17,4 +17,4 @@ Source code for my personal portfolio website. The site showcases my projects an
 
 ## 🤗 Room for improvement
 
-If you noticed a bug or something that could be improved, I welcome you to [file an issue](https://github.com/nikolailehbrink/portfolio/issues/new) or [open a pull request](https://github.com/nikolailehbrink/portfolio/compare) to contribute to the project.
+If you noticed a bug or something that could be improved, I welcome you to [file an issue](https://github.com/MohsenDastaran/Dastaran/issues/new) or [open a pull request](https://github.com/MohsenDastaran/Dastaran/compare) to contribute to the project.
