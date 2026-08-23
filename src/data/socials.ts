@@ -20,9 +20,9 @@ export const SOCIAL_LINKS = [
     href: "https://www.linkedin.com/in/mohsendastaran/",
     logo: LinkedinLogoIcon,
   },
-  {
-    name: "X",
-    href: "https://x.com/Mohsen_Dastaran",
-    logo: XLogoIcon,
-  },
+  // {
+  //   name: "X",
+  //   href: "https://x.com/Mohsen_Dastaran",
+  //   logo: XLogoIcon,
+  // },
 ] as const satisfies Array<SocialProfile>;
