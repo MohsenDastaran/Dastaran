@@ -1,29 +1,26 @@
 {
-  "online-course-certificate": {
-    "title": "Online course certificate",
-    "description": "Course certificate for learntypescript.online",
-    "image": "../assets/projects/course-certificate.webp",
-    "tags": ["Design"]
+  "istgah-map": {
+    "title": "Istgah",
+    "description": "Map for Metro, BRT and Bus",
+    "image": "../assets/projects/Istgah.jpg",
+    "link": "https://cafebazaar.ir/app/com.mohsendastaran.istgah",
+    "github": "https://github.com/MohsenDastaran/istgah-rn",
+    "tags": ["Mobile Application"]
   },
-  "react-data-flow": {
-    "title": "React Data Flow",
-    "description": "Interactive flowchart for react-tutorial.app",
-    "image": "../assets/projects/flow-chart.webp",
-    "tags": ["Design"]
+  "estimator": {
+    "title": "Estimate Website Cost",
+    "description": "Estimate the cost of a website using a simple form",
+    "image": "../assets/projects/estimatorPreview.webp",
+    "link": "https://estimate.dastaran.com",
+    "github": "https://github.com/MohsenDastaran/EstimateWebsiteCost",
+    "tags": ["Web Application"]
   },
-  "secret-messages": {
-    "title": "secretmessag.es",
-    "description": "Secret message generator",
-    "image": "../assets/projects/secret-messages.webp",
-    "link": "https://secretmessag.es",
-    "github": "https://github.com/MohsenDastaran/secret-messages",
-    "tags": ["Web Application", "Design"]
-  },
-  "moskito-wesbite": {
-    "title": "moskito.de",
-    "description": "Agency website",
-    "image": "../assets/projects/moskito-website.webp",
-    "link": "https://moskito.de",
-    "tags": ["Website", "Design"]
+  "social-wrapped": {
+    "title": "Social Wrapped",
+    "description": "Analytics for Major Social Media Platforms",
+    "image": "../assets/projects/socialWrapped.png",
+    "link": "https://wrapped.dastaran.com",
+    "github": "https://github.com/MohsenDastaran/Social-Wrapped",
+    "tags": ["Website", "Mobile", "Desktop"]
   }
 }
