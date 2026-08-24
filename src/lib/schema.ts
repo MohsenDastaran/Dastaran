@@ -5,7 +5,7 @@ import type {
   WebSite,
   WithContext,
 } from "schema-dts";
-import avatar from "@/assets/avatar.webp";
+import avatar from "public/Dastaran.svg";
 import { JOB_TITLE, SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
 import { SOCIAL_LINKS } from "@/data/socials";
 

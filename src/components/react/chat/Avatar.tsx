@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import avatar from "@/assets/avatar.webp?url";
+import avatar from "public/Dastaran.svg?url";
 
 type Props = React.ComponentProps<"img">;
 

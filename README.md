@@ -3,7 +3,7 @@
 Source code for my personal portfolio website. The site showcases my projects and gives an insight into my background, my passion for web development and design, and the technologies I work with.
 
 <a href="https://www.dastaran.com">
-  <img alt="Personal portfolio website of Dastaran" src="src/assets/og/home.webp">
+  <img alt="Personal portfolio website of Dastaran" src="src/assets/og/home.png">
 </a>
 
 ## ✨ Features

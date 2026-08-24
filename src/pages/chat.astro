@@ -5,7 +5,7 @@ import { AI_CHAT_MESSAGE_LIMIT } from "@/consts";
 import ChatComponent from "@/components/react/chat/Chat.tsx";
 import BaseHead from "@/components/BaseHead.astro";
 import RootLayout from "@/layouts/RootLayout.astro";
-import ogImage from "@/assets/og/chat.webp?url";
+// import ogImage from "@/assets/og/chat.webp?url";
 
 const messageCount = Astro.cookies.get("message_count")?.number() ?? 0;
 const messageCountResetTimestamp = Astro.cookies
@@ -22,12 +22,7 @@ const title = "Personal AI Chat";
 ---
 
 <RootLayout>
-  <BaseHead
-    title={title}
-    description={description}
-    image={ogImage}
-    slot="head"
-  />
+  <BaseHead title={title} description={description} slot="head" />
   <ChatComponent
     isChatDisabled={disableChat}
     messageCountResetDate={messageCountResetDate}
