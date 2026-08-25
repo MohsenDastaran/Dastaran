@@ -1,18 +1,21 @@
 ---
 name: write-blog-post
 description: >-
-  Write a new blog post for this portfolio in Nikolai's voice. Use when the user
+  Write a new blog post for this portfolio in Dastaran's voice. Use when the user
   wants to draft, outline, or write a blog article/post for the site (e.g. "let's
   write a post about X", "new blog article", "draft a blog post"). Handles the full
-  flow: folder + frontmatter, outline, section-by-section drafting, MDX components,
-  and the house writing style.
+  flow: API payload + Markdown body, outline, section-by-section drafting, and the
+  house writing style. Do not create local MDX folders.
 ---
 
 # Write a blog post
 
-Help draft a new MDX blog post for this portfolio that reads like Nikolai wrote it
-himself. Work **interactively, step by step** - never dump a whole article at once.
+Help draft a new Markdown blog post that reads like Dastaran wrote it himself.
+Work **interactively, step by step** - never dump a whole article at once.
 The author wants to steer the outline and tone as it comes together.
+
+Posts are stored in the **backend API**, not in this repo. Do **not** create
+`src/content/blog/<slug>/` or `article.mdx`. The contract is in [docs/BLOG_API.md](../../../docs/BLOG_API.md).
 
 ## Workflow
 
@@ -29,38 +32,39 @@ Ask for (or infer from what the user gave you):
 
 If the topic is thin, ask 2-3 sharp questions before writing anything.
 
-### 2. Propose folder + frontmatter
+### 2. Propose slug + metadata
 
-Create the folder `src/content/blog/<slug>/` and an `article.mdx` inside it. The
-folder name is the URL slug (kebab-case, descriptive, not too long). Images live
-in the same folder.
+Draft the JSON fields (not local frontmatter) and confirm them before continuing:
 
-Draft the frontmatter and confirm it before continuing:
-
-```yaml
----
-title: "How to do something useful in <Tech>"
-description: "Learn how to do X with Y for better Z."
-publicationDate: "2026-06-02T12:00:00Z"
-tags: ["React Router 7", "SEO", "Tips and Tricks"]
-cover: "./cover-image.webp"
----
+```json
+{
+  "slug": "how-to-do-something-useful",
+  "title": "How to do something useful in <Tech>",
+  "description": "Learn how to do X with Y for better Z.",
+  "publicationDate": "2026-06-02T12:00:00Z",
+  "tags": ["React Router 7", "SEO", "Tips and Tricks"],
+  "cover": "https://cdn.example.com/blog/how-to-do-something-useful/cover.webp",
+  "draft": true,
+  "showComments": true,
+  "authors": ["MohsenDastaran"]
+}
 ```
 
+- `slug` is kebab-case, descriptive, not too long. It becomes `/blog/{slug}/`.
 - `title` is capitalized naturally and specific (often "How to..." or a benefit).
 - `description` is one sentence, search-friendly, starts with a verb where it fits.
 - `publicationDate` uses ISO 8601 with time. Default to the current date.
 - Add `draft: true` while writing - remove it only when the author says it's ready.
 - `tags` are capitalized naturally (e.g. "React Router 7", "Tips and Tricks", "SEO").
-  Reuse existing tags from other posts when they fit; don't invent near-duplicates.
-- `cover` is optional but expected for most posts. `modificationDate` only when
+  Reuse existing tags when they fit; don't invent near-duplicates.
+- `cover` is an optional absolute HTTPS URL (CDN). `modificationDate` only when
   updating an already-published post. `showComments: false` only for personal /
   non-technical posts.
 
 ### 3. Propose the outline
 
 Suggest the H2/H3 structure (these populate the table of contents) plus where
-intro, alerts, and images go. Get a thumbs-up before drafting.
+intro, callouts, and images go. Get a thumbs-up before drafting.
 
 A typical shape:
 
@@ -71,18 +75,19 @@ A typical shape:
 ### 4. Draft section by section
 
 Write **one section at a time**, in the voice described below. After each, pause so
-the author can react before you continue. Read 1-2 recent posts in
-`src/content/blog/` first if you need to re-anchor on the voice.
+the author can react before you continue. `body` is Markdown only - no JSX imports
+and no Astro/React components.
 
 ### 5. Final pass
 
 Once the body is done: re-read the whole thing for voice consistency, check links
-resolve, confirm exactly one newsletter form, verify code blocks have the right meta
-options, and remind the author to drop in real screenshots and remove `draft: true`.
+resolve, verify code blocks have the right meta options, and remind the author to
+host real screenshots at absolute URLs, save the post via the API, remove
+`draft: true`, and **rebuild the Astro site** so sitemap/RSS/static pages update.
 
 ## Writing style (the house voice)
 
-This is Nikolai's voice as distilled from the existing posts. Match it.
+This is Dastaran's voice as distilled from the existing posts. Match it.
 
 ### Voice & person
 
@@ -117,8 +122,8 @@ say what's coming. Proven patterns:
 
 - **Sentence case** - only the first word capitalized.
   `## Install the necessary package`, `## Take lighting into account`.
-- Mostly imperative and descriptive ("Register the route", "Configure the MDX
-  plugin"). Question-style belongs in `<Alert type="question">` titles, not headings.
+- Mostly imperative and descriptive ("Register the route", "Configure the plugin").
+  Question-style asides belong in a blockquote, not a heading.
 
 ### Code blocks
 
@@ -136,17 +141,17 @@ say what's coming. Proven patterns:
 
 - Link generously - MDN for web concepts, official docs (Vite, React Router,
   Tailwind, etc.), GitHub repos, and even specific issues/commits as proof.
-- Cross-link your own related posts with **relative paths**
-  (e.g. `[sitemap generation guide](/blog/sitemap-react-router-7)`), including
+- Cross-link your own related posts with **relative paths and a trailing slash**
+  (e.g. `[sitemap generation guide](/blog/sitemap-react-router-7/)`), including
   anchors where useful.
 - Back claims with concrete numbers in **bold**: _**23.1 kB of bandwidth**_,
   _**37k+ emails sent**_, _**a single spam email**_. Pair with before/after
-  screenshots that have long, descriptive alt text.
+  screenshots that have long, descriptive alt text and **absolute HTTPS URLs**.
 
 ### Endings
 
 - **Keep it short - no "Conclusion" heading.** Close with a brief result statement,
-  often "You now have a fully automated... for your MDX blog posts." A short closing
+  often "You now have a fully automated... for your blog posts." A short closing
   thought or a pointer to tools/docs is fine. Avoid heavy wrap-up sections.
 
 ### Emphasis & punctuation
@@ -154,7 +159,7 @@ say what's coming. Proven patterns:
 - Bold (`**...**`) for key terms and metrics. Italics (`_word_`) for introducing a
   term or field name. Nested `_**bold italic**_` for the single strongest takeaway
   in a sentence.
-- Dashes are always a hyphen with spaces ` - `, **never** an em dash `—`.
+- Dashes are always a hyphen with spaces `-`, **never** an em dash `—`.
 - Reach for `(e.g., ...)` to make things concrete - the author uses it a lot.
 - Favorite words that fit the voice and may stay: _pretty_, _quite_, _subtle_,
   _straightforward_, _out of the box_. Don't overuse them in a single post.
@@ -168,33 +173,29 @@ small slips that crept into older posts:
 - Watch real typos the author has made: "address" (not "adress"), "built" (not
   "build" as past participle), no doubled "By as default".
 
-## MDX components reference
+## Markdown only
 
-Common imports (only import what the post actually uses):
+`body` cannot import or render Astro/React components. Use blockquotes for callouts:
 
-```mdx
-import Alert from "@/components/Alert.astro";
-import ProfileBadge from "@/components/ProfileBadge.astro";
-```
+> **Tip:** Point at a repo or a better default.
+>
+> **Warning:** Call out a gotcha.
+>
+> **Question: Why not use autocomplete=off?** Then answer in the next paragraph.
 
-- **`<Alert>`** - the main teaching device. Pick the type deliberately:
-  - `type="tip"` - best practices, pointers to your own repo/commits.
-  - `type="info"` - extra technical facts and clarifications.
-  - `type="warning"` - gotchas and things that trip people up.
-  - `type="question"` - FAQ-style aside, almost always with a question in `title`
-    (e.g. `title="Why not use autocomplete=off?"`).
-- **`<ProfileBadge>`** - inline links to GitHub profiles/repos
-  (`<ProfileBadge handle="antfu" platform="GitHub">Anthony Fu</ProfileBadge>`).
+Images: `![descriptive alt text](https://cdn.example.com/...)`.
 
 ## Quick checklist before publishing
 
-- [ ] Folder is `src/content/blog/<slug>/` with `article.mdx`
-- [ ] Frontmatter complete; `publicationDate` set; tags reused where possible
+- [ ] Payload matches [docs/BLOG_API.md](../../../docs/BLOG_API.md); slug is kebab-case
+- [ ] `publicationDate` set; tags reused where possible
 - [ ] Opens with a personal/temporal hook, not a definition
 - [ ] Headings in sentence case, TOC reads well
 - [ ] Code blocks introduced with a colon, explained after with "This..."
-- [ ] Links resolve; own posts cross-linked with relative paths
-- [ ] Metrics in bold; screenshots have descriptive alt text
+- [ ] Links resolve; own posts cross-linked with trailing-slash relative paths
+- [ ] Metrics in bold; screenshots have descriptive alt text and absolute URLs
 - [ ] Short ending, no "Conclusion" heading
-- [ ] Dashes are ` - `, never `—`; clean English, no known typos
+- [ ] Dashes are `-`, never `—`; clean English, no known typos
+- [ ] No JSX imports or MDX components in `body`
 - [ ] `draft: true` removed only when the author confirms it's ready
+- [ ] Remind the author to rebuild the Astro site after the API save

@@ -1,4 +1,3 @@
-import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import node from "@astrojs/node";
 import sitemap from "@astrojs/sitemap";
@@ -19,7 +18,7 @@ import { transformerLineNumbers } from "./src/lib/shiki/transformerLineNumbers";
 import { getLastmodMap } from "./src/lib/sitemap";
 
 // Built once and reused for every sitemap entry rather than per call.
-const lastmodMap = getLastmodMap();
+const lastmodMap = await getLastmodMap();
 
 const site = "https://www.dastaran.com/";
 
@@ -79,17 +78,22 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
+      BLOG_API_URL: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      BLOG_API_TOKEN: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
     },
   },
-  redirects: {
-    "/blog/tailwind-css-tips": "/blog/tailwindcss-v3-tips",
+  image: {
+    remotePatterns: [{ protocol: "https" }],
   },
   integrations: [
-    mdx({
-      optimize: {
-        ignoreElementNames: ["pre", "img"],
-      },
-    }),
     sitemap({
       serialize(item) {
         const pathname = new URL(item.url).pathname.replace(/\/$/, "");

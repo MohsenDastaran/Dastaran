@@ -11,8 +11,5 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-  "mdx": {
-    "checkMdx": true
   }
 }

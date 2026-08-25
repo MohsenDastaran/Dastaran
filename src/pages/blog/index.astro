@@ -44,9 +44,7 @@ const schemaPosts = await Promise.all(
       description: data.description,
       // Same image the post page exposes (cover, else the generated OG image),
       // so each listing node is a complete BlogPosting on its own.
-      image: data.cover
-        ? new URL(data.cover.src, origin).href
-        : `${postUrl}og.png`,
+      image: data.cover ?? `${postUrl}og.png`,
       datePublished: data.publicationDate.toISOString(),
       dateModified: (
         data.modificationDate ?? data.publicationDate

@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import RootLayout from "./RootLayout.astro";
@@ -50,9 +49,10 @@ const formattedPublicationDate = formatDate(publicationDate);
 const formattedModificationDate = modificationDate
   ? formatDate(modificationDate)
   : null;
-// Resolve "og.png" relative to the post URL (which ends in a slash), so the
-// trailing slash joins cleanly instead of producing a `//og.png` redirect.
-const coverImageURL = new URL(cover ? cover.src : "og.png", href).href;
+// Remote covers are absolute URLs from the API. Otherwise resolve "og.png"
+// relative to the post URL (which ends in a slash), so the trailing slash
+// joins cleanly instead of producing a `//og.png` redirect.
+const coverImageURL = cover ?? new URL("og.png", href).href;
 
 // Reference the shared Person entity when the post is written by the site owner,
 // otherwise inline a Person for the guest author.
@@ -62,13 +62,13 @@ const authorNode =
     ? personRef(origin)
     : { "@type": "Person" as const, name: primaryAuthor.data.name };
 
-// Google's Article rich result wants an ImageObject with dimensions; cover
-// images carry their own, the generated OG fallback is always 1200x630.
+// Google's Article rich result wants an ImageObject with dimensions. Remote
+// covers don't ship width/height, so we use the OG fallback size of 1200x630.
 const articleImage = {
   "@type": "ImageObject" as const,
   url: coverImageURL,
-  width: `${cover?.width ?? 1200}`,
-  height: `${cover?.height ?? 630}`,
+  width: "1200",
+  height: "630",
 };
 ---
 
@@ -214,19 +214,16 @@ const articleImage = {
           class="relative mx-auto aspect-video w-full max-w-[1200px]
             overflow-hidden rounded-2xl sm:border sm:p-2"
         >
-          <Image
+          <img
             src={cover}
-            loading="eager"
-            width={32}
-            quality="low"
             alt=""
+            loading="eager"
             class="absolute aspect-video size-full object-cover blur-3xl"
           />
-          <Image
+          <img
             src={cover}
             loading="eager"
             fetchpriority="high"
-            quality="high"
             alt={`Cover image for "${title}"`}
             class="relative aspect-video size-full rounded-xl object-cover
               sm:border"
