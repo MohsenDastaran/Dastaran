@@ -8,10 +8,10 @@ Source code for my personal portfolio website. The site showcases my projects an
 
 ## ✨ Features
 
-- **Modern Technologies**: Built with [Astro](https://astro.build/), [TypeScript](https://www.typescriptlang.org/), [MDX](https://mdxjs.com/), and [Tailwind CSS](https://tailwindcss.com/).
+- **Modern Technologies**: Built with [Astro](https://astro.build/), [TypeScript](https://www.typescriptlang.org/), and [Tailwind CSS](https://tailwindcss.com/).
 - **Homepage**: A homepage with a brief introduction, a list of projects, my skills, work experience, and contact information.
 - **Custom AI Chatbot**: A [personal AI chatbot](https://www.dastaran.com/chat) capable of responding to queries about domain-specific information related to me, developed using [LLamaIndex.TS](https://ts.llamaindex.ai/), the [Vercel AI SDK](https://sdk.vercel.ai/docs), and powered by the [OpenAI API](https://openai.com/blog/openai-api).
-- **Personal blog**: A [blog section](https://www.dastaran.com/blog) to share my thoughts and experiences. Built with [MDX](https://mdxjs.com/) to handle content management.
+- **Personal blog**: A [blog section](https://www.dastaran.com/blog) to share my thoughts and experiences. Posts are Markdown loaded from a backend API at build time.
 - **SEO**: Optimized for search engines and social sharing
 - **Accessibility**: Build on top of [Radix UI](https://radix-ui.com/) and [shadcn/ui](https://ui.shadcn.com/docs) for accessible, modern and inclusive design.
 

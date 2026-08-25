@@ -108,11 +108,10 @@ The preview route is SSR (`prerender = false`), sends `noindex`, is disallowed i
 
 `body` is **Markdown**, rendered with the site's existing remark/rehype pipeline (Shiki, heading IDs, TOC).
 
-- Do **not** put JSX imports or Astro/React components in `body` (`import Alert from ...`, `<Alert>`, `<ProfileBadge>`, etc.). Those only worked with local MDX files.
+- Do **not** put JSX, MDX, or Astro/React components in `body`. Callouts can be blockquotes (`> **Tip:** ...`).
 - Images must be **absolute URLs** (`https://cdn.example.com/...`), not relative paths.
 - Links to other posts should be site-relative with a trailing slash: `[sitemap guide](/blog/sitemap-react-router-7/)`.
 - Fenced code blocks can still use meta options: `filename="..."`, `showLineNumbers`, `highlight={6-8}`, `add={...}`, `remove={...}`.
-- MDX without imports is valid Markdown, so existing writing style (headings, emphasis, lists) still works.
 
 ## Cover images
 

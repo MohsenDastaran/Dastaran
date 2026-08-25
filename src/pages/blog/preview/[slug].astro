@@ -9,6 +9,7 @@ import {
   isBlogAdminToken,
 } from "@/lib/blog-admin";
 import { renderBlogMarkdown } from "@/lib/render-blog-markdown";
+import MarkdownBody from "@/components/MarkdownBody.astro";
 
 export const prerender = false;
 
@@ -62,5 +63,5 @@ const authorIds = post.authors?.length ? post.authors : ["MohsenDastaran"];
   headings={headings}
   relatedPosts={relatedPosts}
 >
-  <Fragment set:html={html} />
+  <MarkdownBody html={html} />
 </BlogPost>

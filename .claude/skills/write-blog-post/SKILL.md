@@ -5,7 +5,7 @@ description: >-
   wants to draft, outline, or write a blog article/post for the site (e.g. "let's
   write a post about X", "new blog article", "draft a blog post"). Handles the full
   flow: API payload + Markdown body, outline, section-by-section drafting, and the
-  house writing style. Do not create local MDX folders.
+  house writing style. Do not create local Markdown or MDX folders.
 ---
 
 # Write a blog post
@@ -15,7 +15,7 @@ Work **interactively, step by step** - never dump a whole article at once.
 The author wants to steer the outline and tone as it comes together.
 
 Posts are stored in the **backend API**, not in this repo. Do **not** create
-`src/content/blog/<slug>/` or `article.mdx`. The contract is in [docs/BLOG_API.md](../../../docs/BLOG_API.md).
+`src/content/blog/` or local `.md` / `.mdx` files. The contract is in [docs/BLOG_API.md](../../../docs/BLOG_API.md).
 
 ## Workflow
 
@@ -199,6 +199,6 @@ Images: `![descriptive alt text](https://cdn.example.com/...)`.
 - [ ] Metrics in bold; screenshots have descriptive alt text and absolute URLs
 - [ ] Short ending, no "Conclusion" heading
 - [ ] Dashes are `-`, never `—`; clean English, no known typos
-- [ ] No JSX imports or MDX components in `body`
+- [ ] No JSX, MDX, or Astro components in `body`
 - [ ] `status` is `under-review` until the author confirms it's ready to publish
 - [ ] Remind the author to preview at `/blog/preview/{slug}/`, then rebuild the Astro site after publish

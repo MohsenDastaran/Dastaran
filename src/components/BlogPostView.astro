@@ -1,11 +1,10 @@
 ---
-import { type CollectionEntry, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import BlogPost from "@/layouts/BlogPost.astro";
 import { estimateReadingTime } from "@/lib/readingTime";
 import { getRelatedPosts, generatePostHeadings } from "@/lib/posts";
-import BlogImage from "@/components/BlogImage.astro";
-import BlogLink from "@/components/BlogLink.astro";
-import CodeBlock from "@/components/CodeBlock.astro";
+import { renderBlogMarkdown } from "@/lib/render-blog-markdown";
+import MarkdownBody from "@/components/MarkdownBody.astro";
 
 type Props = {
   post: CollectionEntry<"blog">;
@@ -13,8 +12,13 @@ type Props = {
 
 const { post } = Astro.props;
 const readingTime = estimateReadingTime(post.body);
-const { Content, headings: getHeadings } = await render(post);
-const headings = generatePostHeadings(getHeadings);
+const renderedHtml = post.rendered?.html;
+const renderedHeadings = post.rendered?.metadata?.headings;
+const markdown =
+  renderedHtml !== undefined
+    ? { html: renderedHtml, headings: renderedHeadings ?? [] }
+    : await renderBlogMarkdown(post.body ?? "");
+const headings = generatePostHeadings(markdown.headings);
 const relatedPosts = await getRelatedPosts(post);
 ---
 
@@ -25,6 +29,5 @@ const relatedPosts = await getRelatedPosts(post);
   slug={post.id}
   {...post.data}
 >
-  <!-- TODO: Prevent empty paragraphs from being created for img  -->
-  <Content components={{ img: BlogImage, a: BlogLink, pre: CodeBlock }} />
+  <MarkdownBody html={markdown.html} />
 </BlogPost>

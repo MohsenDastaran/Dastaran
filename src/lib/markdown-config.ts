@@ -7,6 +7,7 @@ import {
 } from "./shiki/transformerMeta";
 import { transformerCodeBlock } from "./shiki/transformerCodeBlock";
 import { transformerLineNumbers } from "./shiki/transformerLineNumbers";
+import { rehypeBlogMarkdown } from "./rehype-blog-markdown";
 
 export const blogRehypePlugins = [
   rehypeHeadingIds,
@@ -27,6 +28,7 @@ export const blogRehypePlugins = [
       },
       headingProperties: { class: "group relative text-balance" },
     }),
+  rehypeBlogMarkdown,
 ] satisfies RehypePlugins;
 
 export const blogShikiConfig = {

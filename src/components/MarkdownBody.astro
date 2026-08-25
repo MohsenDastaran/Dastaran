@@ -1,0 +1,14 @@
+---
+import MarkdownEnhancements from "@/components/react/MarkdownEnhancements";
+
+type Props = {
+  html: string;
+};
+
+const { html } = Astro.props;
+---
+
+<div data-blog-markdown>
+  <Fragment set:html={html} />
+</div>
+<MarkdownEnhancements client:visible />
