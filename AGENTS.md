@@ -18,7 +18,7 @@ Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React
 
 Content collections defined in `src/content.config.ts` with Zod schemas:
 
-- **blog** — Markdown posts fetched at build time from `GET {BLOG_API_URL}/posts` via a custom loader in `src/content.config.ts`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
+- **blog** — Published Markdown posts fetched at build time from `GET {BLOG_API_URL}/posts` via a custom loader in `src/content.config.ts`. Under-review posts are previewed at `/blog/preview/{slug}/`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
 - **authors** — JSON file at `src/data/authors.json`, referenced by blog posts
 - **career** — JSON file at `src/data/career.json` (work/education entries)
 - **projects** — JSON file at `src/data/projects.json`
@@ -28,7 +28,7 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 - `src/layouts/RootLayout.astro` — Base layout (navbar, footer, SEO head)
 - `src/layouts/BlogPost.astro` — Blog post wrapper (metadata, TOC, reading time, view count, comments)
 - Pages in `src/pages/` follow Astro file-based routing
-- API endpoints: `src/pages/api/chat/` (AI chat)
+- API endpoints: `src/pages/api/chat/` (AI chat), `src/pages/api/blog/` (admin publish/delete)
 
 ### Components
 
@@ -80,19 +80,20 @@ Draft the post as JSON matching `GET /posts` (plus a Markdown `body`):
   "publicationDate": "2026-03-01T12:00:00Z",
   "tags": ["React Router 7", "SEO", "Tips and Tricks"],
   "cover": "https://cdn.example.com/blog/how-to-do-something-useful/cover.webp",
-  "draft": true,
+  "status": "under-review",
   "body": "I ran into this when...\n"
 }
 ```
 
-- `draft: true` to hide from production builds
+- `status: "under-review"` until the admin publishes from `/blog/preview/{slug}/`
+- `status: "published"` after approval (`GET /posts` returns published posts only)
 - `modificationDate` when updating an existing post
 - `showComments: false` only for non-technical or personal posts
 - Tags are capitalized naturally (e.g. "React Router 7", "Tips and Tricks", "SEO")
 - Cover and inline images must be absolute `https` URLs
 - `body` is Markdown only - no JSX imports or Astro components
 
-After the backend saves the post, rebuild the Astro site so `/blog/{slug}/`, the sitemap, and RSS update.
+After publish, rebuild the Astro site so `/blog/{slug}/`, the sitemap, and RSS update.
 
 ### Writing Style
 

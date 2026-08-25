@@ -44,7 +44,7 @@ Draft the JSON fields (not local frontmatter) and confirm them before continuing
   "publicationDate": "2026-06-02T12:00:00Z",
   "tags": ["React Router 7", "SEO", "Tips and Tricks"],
   "cover": "https://cdn.example.com/blog/how-to-do-something-useful/cover.webp",
-  "draft": true,
+  "status": "under-review",
   "showComments": true,
   "authors": ["MohsenDastaran"]
 }
@@ -54,7 +54,9 @@ Draft the JSON fields (not local frontmatter) and confirm them before continuing
 - `title` is capitalized naturally and specific (often "How to..." or a benefit).
 - `description` is one sentence, search-friendly, starts with a verb where it fits.
 - `publicationDate` uses ISO 8601 with time. Default to the current date.
-- Add `draft: true` while writing - remove it only when the author says it's ready.
+- Add `status: "under-review"` while writing. Publish from
+  `/blog/preview/{slug}/` (or set `status: "published"`) only when the author
+  says it's ready.
 - `tags` are capitalized naturally (e.g. "React Router 7", "Tips and Tricks", "SEO").
   Reuse existing tags when they fit; don't invent near-duplicates.
 - `cover` is an optional absolute HTTPS URL (CDN). `modificationDate` only when
@@ -82,8 +84,9 @@ and no Astro/React components.
 
 Once the body is done: re-read the whole thing for voice consistency, check links
 resolve, verify code blocks have the right meta options, and remind the author to
-host real screenshots at absolute URLs, save the post via the API, remove
-`draft: true`, and **rebuild the Astro site** so sitemap/RSS/static pages update.
+host real screenshots at absolute URLs, save the post via the API as
+`under-review`, preview at `/blog/preview/{slug}/`, then publish and
+**rebuild the Astro site** so sitemap/RSS/static pages update.
 
 ## Writing style (the house voice)
 
@@ -197,5 +200,5 @@ Images: `![descriptive alt text](https://cdn.example.com/...)`.
 - [ ] Short ending, no "Conclusion" heading
 - [ ] Dashes are `-`, never `—`; clean English, no known typos
 - [ ] No JSX imports or MDX components in `body`
-- [ ] `draft: true` removed only when the author confirms it's ready
-- [ ] Remind the author to rebuild the Astro site after the API save
+- [ ] `status` is `under-review` until the author confirms it's ready to publish
+- [ ] Remind the author to preview at `/blog/preview/{slug}/`, then rebuild the Astro site after publish

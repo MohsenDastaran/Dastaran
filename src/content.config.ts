@@ -21,7 +21,6 @@ const blogLoader: Loader = {
         data: {
           title: post.title,
           description: post.description,
-          draft: post.draft,
           publicationDate: post.publicationDate,
           modificationDate: post.modificationDate ?? undefined,
           cover: post.cover ?? undefined,
@@ -49,7 +48,6 @@ const blog = defineCollection({
     .object({
       title: z.string(),
       description: z.string(),
-      draft: z.boolean().default(false),
       publicationDate: z.coerce.date(),
       modificationDate: z.coerce.date().optional(),
       cover: z.url().optional(),

@@ -3,12 +3,15 @@ import { z } from "zod";
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+export const BLOG_STATUSES = ["published", "under-review"] as const;
+export type BlogStatus = (typeof BLOG_STATUSES)[number];
+
 export const blogPostApiSchema = z.object({
   slug: z.string().min(1).regex(SLUG_PATTERN, "slug must be kebab-case"),
   title: z.string().min(1),
   description: z.string().min(1),
   body: z.string(),
-  draft: z.boolean().optional().default(false),
+  status: z.enum(BLOG_STATUSES).optional().default("published"),
   publicationDate: z.coerce.date(),
   modificationDate: z.coerce.date().nullish(),
   cover: z.url().nullish(),
@@ -22,6 +25,11 @@ export type BlogPostApi = z.infer<typeof blogPostApiSchema>;
 const postsResponseSchema = z.union([
   z.array(z.unknown()),
   z.object({ posts: z.array(z.unknown()) }),
+]);
+
+const postResponseSchema = z.union([
+  blogPostApiSchema,
+  z.object({ post: blogPostApiSchema }),
 ]);
 
 function readEnv(name: string): string | undefined {
@@ -38,8 +46,29 @@ function readEnv(name: string): string | undefined {
   return value ? value : undefined;
 }
 
-function postsUrl(baseUrl: string) {
-  return `${baseUrl.replace(/\/$/, "")}/posts`;
+export function getBlogApiToken() {
+  return readEnv("BLOG_API_TOKEN");
+}
+
+function getBlogApiUrl() {
+  return readEnv("BLOG_API_URL");
+}
+
+function postsUrl(baseUrl: string, slug?: string) {
+  const base = `${baseUrl.replace(/\/$/, "")}/posts`;
+  return slug ? `${base}/${encodeURIComponent(slug)}` : base;
+}
+
+function apiHeaders(hasJsonBody = false) {
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (hasJsonBody) {
+    headers["Content-Type"] = "application/json";
+  }
+  const token = getBlogApiToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return headers;
 }
 
 function parsePostsPayload(payload: unknown): Array<BlogPostApi> {
@@ -63,6 +92,9 @@ function parsePostsPayload(payload: unknown): Array<BlogPostApi> {
       );
       continue;
     }
+    if (parsed.data.status !== "published") {
+      continue;
+    }
     if (seen.has(parsed.data.slug)) {
       console.warn(`Skipping duplicate blog slug "${parsed.data.slug}"`);
       continue;
@@ -74,8 +106,17 @@ function parsePostsPayload(payload: unknown): Array<BlogPostApi> {
   return posts;
 }
 
+function parsePostPayload(payload: unknown): BlogPostApi | null {
+  const parsed = postResponseSchema.safeParse(payload);
+  if (!parsed.success) {
+    console.warn("Invalid blog post from API:", z.prettifyError(parsed.error));
+    return null;
+  }
+  return "post" in parsed.data ? parsed.data.post : parsed.data;
+}
+
 async function loadBlogPosts(): Promise<Array<BlogPostApi>> {
-  const apiUrl = readEnv("BLOG_API_URL");
+  const apiUrl = getBlogApiUrl();
   if (!apiUrl) {
     console.warn(
       "BLOG_API_URL is not set; blog collection will be empty. Set it to load posts from the API.",
@@ -83,15 +124,9 @@ async function loadBlogPosts(): Promise<Array<BlogPostApi>> {
     return [];
   }
 
-  const headers: Record<string, string> = { Accept: "application/json" };
-  const token = readEnv("BLOG_API_TOKEN");
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
   try {
     const response = await fetch(postsUrl(apiUrl), {
-      headers,
+      headers: apiHeaders(),
       signal: AbortSignal.timeout(15_000),
     });
     if (!response.ok) {
@@ -117,4 +152,61 @@ async function loadBlogPosts(): Promise<Array<BlogPostApi>> {
  */
 export async function fetchBlogPosts(): Promise<Array<BlogPostApi>> {
   return loadBlogPosts();
+}
+
+/** Fetch one post by slug, including under-review posts. Returns null on 404. */
+export async function fetchBlogPost(slug: string): Promise<BlogPostApi | null> {
+  const apiUrl = getBlogApiUrl();
+  if (!apiUrl) {
+    return null;
+  }
+
+  try {
+    const response = await fetch(postsUrl(apiUrl, slug), {
+      headers: apiHeaders(),
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (response.status === 404) {
+      return null;
+    }
+    if (!response.ok) {
+      console.warn(
+        `Blog API request for "${slug}" failed (${response.status} ${response.statusText}).`,
+      );
+      return null;
+    }
+    return parsePostPayload(await response.json());
+  } catch (error) {
+    console.warn(`Blog API request for "${slug}" failed.`, error);
+    return null;
+  }
+}
+
+export async function publishBlogPost(slug: string): Promise<boolean> {
+  const apiUrl = getBlogApiUrl();
+  if (!apiUrl) {
+    return false;
+  }
+
+  const response = await fetch(postsUrl(apiUrl, slug), {
+    method: "PATCH",
+    headers: apiHeaders(true),
+    body: JSON.stringify({ status: "published" }),
+    signal: AbortSignal.timeout(15_000),
+  });
+  return response.ok;
+}
+
+export async function deleteBlogPost(slug: string): Promise<boolean> {
+  const apiUrl = getBlogApiUrl();
+  if (!apiUrl) {
+    return false;
+  }
+
+  const response = await fetch(postsUrl(apiUrl, slug), {
+    method: "DELETE",
+    headers: apiHeaders(),
+    signal: AbortSignal.timeout(15_000),
+  });
+  return response.ok;
 }

@@ -20,12 +20,13 @@ const AI_USER_AGENTS = [
 
 const getRobotsTxt = (origin: string) => {
   const aiRules = AI_USER_AGENTS.map(
-    (agent) => `User-agent: ${agent}\nAllow: /`,
+    (agent) => `User-agent: ${agent}\nAllow: /\nDisallow: /blog/preview/`,
   ).join("\n\n");
 
   return `\
 User-agent: *
 Allow: /
+Disallow: /blog/preview/
 
 ${aiRules}
 

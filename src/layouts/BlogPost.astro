@@ -19,11 +19,14 @@ import Comments from "@/components/Comments.astro";
 import { DUMMY_COMMENTS } from "@/data/comments";
 import { breadcrumbSchema, personRef, websiteRef } from "@/lib/schema";
 import { getEntries } from "astro:content";
+import BlogPreviewActions from "@/components/react/BlogPreviewActions";
 
 type Props = CollectionEntry<"blog">["data"] & {
   readingTime: ReadingTime;
   headings: Array<TocEntry>;
   relatedPosts?: Array<CollectionEntry<"blog"> & { readingTime: number }>;
+  isPreview?: boolean;
+  slug?: string;
 };
 
 const {
@@ -34,11 +37,12 @@ const {
   cover,
   readingTime,
   tags,
-  draft,
   headings,
   authors: authorsReferences,
   showComments,
   relatedPosts = [],
+  isPreview = false,
+  slug,
 } = Astro.props;
 
 const authors = await getEntries(authorsReferences);
@@ -51,8 +55,10 @@ const formattedModificationDate = modificationDate
   : null;
 // Remote covers are absolute URLs from the API. Otherwise resolve "og.png"
 // relative to the post URL (which ends in a slash), so the trailing slash
-// joins cleanly instead of producing a `//og.png` redirect.
-const coverImageURL = cover ?? new URL("og.png", href).href;
+// joins cleanly instead of producing a `//og.png` redirect. Preview URLs have
+// no generated OG image, so missing covers fall back to the site default.
+const coverImageURL =
+  cover ?? (isPreview ? undefined : new URL("og.png", href).href);
 
 // Reference the shared Person entity when the post is written by the site owner,
 // otherwise inline a Person for the guest author.
@@ -64,63 +70,87 @@ const authorNode =
 
 // Google's Article rich result wants an ImageObject with dimensions. Remote
 // covers don't ship width/height, so we use the OG fallback size of 1200x630.
-const articleImage = {
-  "@type": "ImageObject" as const,
-  url: coverImageURL,
-  width: "1200",
-  height: "630",
-};
+const articleImage = coverImageURL
+  ? {
+      "@type": "ImageObject" as const,
+      url: coverImageURL,
+      width: "1200",
+      height: "630",
+    }
+  : undefined;
 ---
 
 <RootLayout>
   <BaseHead
-    title={title}
+    title={isPreview ? `Preview: ${title}` : title}
     description={description}
     image={coverImageURL}
-    ogType="article"
+    ogType={isPreview ? "website" : "article"}
+    noindex={isPreview}
     slot="head"
   >
-    <meta property="article:author" content={authors[0].data.name} />
-    <meta
-      property="article:published_time"
-      content={publicationDate.toISOString()}
-    />
     {
-      modificationDate && (
-        <meta
-          property="article:modified_time"
-          content={modificationDate.toISOString()}
-        />
+      !isPreview && (
+        <>
+          <meta property="article:author" content={authors[0].data.name} />
+          <meta
+            property="article:published_time"
+            content={publicationDate.toISOString()}
+          />
+          {modificationDate && (
+            <meta
+              property="article:modified_time"
+              content={modificationDate.toISOString()}
+            />
+          )}
+          {tags?.map((tag) => (
+            <meta property="article:tag" content={tag} />
+          ))}
+          <Schema
+            item={{
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              "@id": `${href}#article`,
+              headline: title,
+              description,
+              datePublished: publicationDate.toISOString(),
+              dateModified: (modificationDate ?? publicationDate).toISOString(),
+              image: articleImage,
+              mainEntityOfPage: { "@id": href },
+              isPartOf: websiteRef(origin),
+              inLanguage: "en",
+              author: authorNode,
+              publisher: personRef(origin),
+              keywords: tags?.join(", "),
+            }}
+          />
+          <Schema
+            item={breadcrumbSchema(origin, [
+              { name: "Home", url: "/" },
+              { name: "Blog", url: "/blog/" },
+              { name: title, url: pathname },
+            ])}
+          />
+        </>
       )
     }
-    {tags?.map((tag) => <meta property="article:tag" content={tag} />)}
-    <Schema
-      item={{
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "@id": `${href}#article`,
-        headline: title,
-        description,
-        datePublished: publicationDate.toISOString(),
-        dateModified: (modificationDate ?? publicationDate).toISOString(),
-        image: articleImage,
-        mainEntityOfPage: { "@id": href },
-        isPartOf: websiteRef(origin),
-        inLanguage: "en",
-        author: authorNode,
-        publisher: personRef(origin),
-        keywords: tags?.join(", "),
-      }}
-    />
-    <Schema
-      item={breadcrumbSchema(origin, [
-        { name: "Home", url: "/" },
-        { name: "Blog", url: "/blog/" },
-        { name: title, url: pathname },
-      ])}
-    />
   </BaseHead>
   <article class="flex w-full flex-col gap-12">
+    {
+      isPreview && slug ? (
+        <div
+          class="sticky top-16 z-30 mx-auto flex w-full max-w-3xl flex-col gap-3
+            rounded-xl border bg-card p-4 shadow-sm offset-border sm:flex-row
+            sm:items-center sm:justify-between"
+        >
+          <p class="text-sm text-muted-foreground">
+            This post is under review. It is not public, not in the sitemap, and
+            will not appear on /blog until you publish and rebuild the site.
+          </p>
+          <BlogPreviewActions client:load slug={slug} />
+        </div>
+      ) : null
+    }
     <header
       class={cn(
         "mx-auto prose w-full prose-neutral dark:prose-invert",
@@ -169,19 +199,29 @@ const articleImage = {
           }
         </div>
         {
-          draft ? (
+          isPreview ? (
             <Badge
               className="bg-orange-500/20 text-orange-600 dark:text-orange-400"
             >
               <PencilIcon size={16} weight="duotone" />
-              Draft
+              Under review
             </Badge>
           ) : null
         }
-        <span>•</span>
-        <ViewCount server:defer pathname={pathname} usePost={" ".repeat(2048)}>
-          <Skeleton slot="fallback" class="h-5 w-8" />
-        </ViewCount>
+        {
+          !isPreview ? (
+            <>
+              <span>•</span>
+              <ViewCount
+                server:defer
+                pathname={pathname}
+                usePost={" ".repeat(2048)}
+              >
+                <Skeleton slot="fallback" class="h-5 w-8" />
+              </ViewCount>
+            </>
+          ) : null
+        }
       </div>
       <p class="text-muted-foreground">
         {description}
@@ -270,6 +310,6 @@ const articleImage = {
 
     <RelatedPosts posts={relatedPosts} />
 
-    {showComments ? <Comments comments={DUMMY_COMMENTS} /> : null}
+    {!isPreview && showComments ? <Comments comments={DUMMY_COMMENTS} /> : null}
   </article>
 </RootLayout>
