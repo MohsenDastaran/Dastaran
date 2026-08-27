@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { apiUrl, getApiBaseUrl } from "./api";
 import {
   blogPostApiSchema,
-  getBlogApiUrl,
   parsePostsPayload,
   resolveAuthorIds,
 } from "./blog-api";
@@ -67,15 +67,16 @@ describe("resolveAuthorIds", () => {
   });
 });
 
-describe("getBlogApiUrl", () => {
-  it("uses BLOG_API_URL and strips a trailing slash", () => {
-    const previous = process.env.BLOG_API_URL;
-    process.env.BLOG_API_URL = "https://api.dastaran.com/";
-    expect(getBlogApiUrl()).toBe("https://api.dastaran.com");
+describe("getApiBaseUrl", () => {
+  it("uses API_BASE_URL as the host and strips a trailing slash", () => {
+    const previous = process.env.API_BASE_URL;
+    process.env.API_BASE_URL = "https://api.dastaran.com/";
+    expect(getApiBaseUrl()).toBe("https://api.dastaran.com");
+    expect(apiUrl("/posts")).toBe("https://api.dastaran.com/posts");
     if (previous === undefined) {
-      delete process.env.BLOG_API_URL;
+      delete process.env.API_BASE_URL;
     } else {
-      process.env.BLOG_API_URL = previous;
+      process.env.API_BASE_URL = previous;
     }
   });
 });

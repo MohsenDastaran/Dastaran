@@ -40,7 +40,7 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
-      BLOG_API_URL: envField.string({
+      API_BASE_URL: envField.string({
         context: "server",
         access: "secret",
         optional: true,

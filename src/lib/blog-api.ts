@@ -1,5 +1,5 @@
-import { loadEnv } from "vite";
 import { z } from "zod";
+import { apiUrl, readEnv } from "./api";
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -114,38 +114,12 @@ const postResponseSchema = z.union([
   z.object({ post: blogPostApiSchema }),
 ]);
 
-function readEnv(name: string): string | undefined {
-  const fromProcess = process.env[name];
-  if (fromProcess) {
-    return fromProcess;
-  }
-  const loaded = loadEnv(
-    process.env.NODE_ENV ?? "development",
-    process.cwd(),
-    "",
-  );
-  const value = loaded[name];
-  return value ? value : undefined;
-}
-
 export function getBlogApiToken() {
   return readEnv("BLOG_API_TOKEN");
 }
 
-const DEFAULT_BLOG_API_URL = "https://api.dastaran.com/";
-
-function normalizeBlogApiUrl(raw: string) {
-  return raw.replace(/\/$/, "").replace(/\/posts$/i, "");
-}
-
-export function getBlogApiUrl() {
-  const raw = readEnv("BLOG_API_URL")?.trim();
-  return normalizeBlogApiUrl(raw || DEFAULT_BLOG_API_URL);
-}
-
-function postsUrl(baseUrl: string, slug?: string) {
-  const base = `${baseUrl.replace(/\/$/, "")}/posts`;
-  return slug ? `${base}/${encodeURIComponent(slug)}` : base;
+function postsUrl(slug?: string) {
+  return slug ? apiUrl(`/posts/${encodeURIComponent(slug)}`) : apiUrl("/posts");
 }
 
 function apiHeaders(hasJsonBody = false) {
@@ -205,10 +179,8 @@ function parsePostPayload(payload: unknown): BlogPostApi | null {
 }
 
 async function loadBlogPosts(): Promise<Array<BlogPostApi>> {
-  const apiUrl = getBlogApiUrl();
-
   try {
-    const response = await fetch(postsUrl(apiUrl), {
+    const response = await fetch(postsUrl(), {
       headers: apiHeaders(),
       signal: AbortSignal.timeout(15_000),
     });
@@ -258,7 +230,7 @@ export async function fetchPublishedBlogPost(
 /** Fetch one post by slug, including under-review posts. Returns null on 404. */
 export async function fetchBlogPost(slug: string): Promise<BlogPostApi | null> {
   try {
-    const response = await fetch(postsUrl(getBlogApiUrl(), slug), {
+    const response = await fetch(postsUrl(slug), {
       headers: apiHeaders(),
       signal: AbortSignal.timeout(15_000),
     });
@@ -279,7 +251,7 @@ export async function fetchBlogPost(slug: string): Promise<BlogPostApi | null> {
 }
 
 export async function publishBlogPost(slug: string): Promise<boolean> {
-  const response = await fetch(postsUrl(getBlogApiUrl(), slug), {
+  const response = await fetch(postsUrl(slug), {
     method: "PATCH",
     headers: apiHeaders(true),
     body: JSON.stringify({ status: "published" }),
@@ -289,7 +261,7 @@ export async function publishBlogPost(slug: string): Promise<boolean> {
 }
 
 export async function deleteBlogPost(slug: string): Promise<boolean> {
-  const response = await fetch(postsUrl(getBlogApiUrl(), slug), {
+  const response = await fetch(postsUrl(slug), {
     method: "DELETE",
     headers: apiHeaders(),
     signal: AbortSignal.timeout(15_000),

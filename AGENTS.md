@@ -18,7 +18,7 @@ Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React
 
 Content collections defined in `src/content.config.ts` with Zod schemas:
 
-- **blog** — Published Markdown posts from `GET {BLOG_API_URL}/posts`. `/blog/` and `/blog/{slug}/` fetch at request time; the content loader still runs at build for sitemap/RSS. Under-review posts are previewed at `/blog/preview/{slug}/`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
+- **blog** — Published Markdown posts from `GET {API_BASE_URL}/posts`. `/blog/` and `/blog/{slug}/` fetch at request time; the content loader still runs at build for sitemap/RSS. Under-review posts are previewed at `/blog/preview/{slug}/`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
 - **authors** — JSON file at `src/data/authors.json`, referenced by blog posts
 - **career** — JSON file at `src/data/career.json` (work/education entries)
 - **projects** — JSON file at `src/data/projects.json`
@@ -40,7 +40,8 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 ### Key Utilities
 
 - `src/lib/utils.ts` — `cn()` for Tailwind class merging, `slugify()`
-- `src/lib/blog-api.ts` — Fetch and Zod-parse blog posts from the backend API
+- `src/lib/api.ts` — Shared API host (`API_BASE_URL`, default `https://api.dastaran.com/`)
+- `src/lib/blog-api.ts` — Fetch and Zod-parse blog posts from `{API_BASE_URL}/posts`
 - `src/lib/posts.ts` — Blog collection queries, TOC generation
 - `src/lib/shiki/` — Custom Shiki transformers for code blocks (line numbers, diff highlighting, meta highlights, file icons)
 - `src/lib/og/` — Open Graph image generation

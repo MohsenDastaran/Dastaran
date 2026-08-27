@@ -24,6 +24,11 @@ const tags = await getBlogTags();
 const filteredTag = tags.find(({ slug }) => slug === tag);
 
 const posts = await getPosts({ tag: filteredTag?.name });
+// log in dev console
+setTimeout(() => {
+  console.log(posts);
+}, 5000);
+console.log(posts);
 
 const schemaPosts = await Promise.all(
   posts.map(async ({ data, id: slug }) => {

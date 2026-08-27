@@ -1,6 +1,6 @@
 # Blog API
 
-The Astro site loads **published** blog posts from `GET {BLOG_API_URL}/posts`. `/blog/` and `/blog/{slug}/` are SSR and fetch that list at **request time**, so new published posts show up without a rebuild.
+The Astro site loads **published** blog posts from `GET {API_BASE_URL}/posts`. `/blog/` and `/blog/{slug}/` are SSR and fetch that list at **request time**, so new published posts show up without a rebuild.
 
 The sitemap, RSS feed, and `llms.txt` are still generated at **build time**. Rebuild after publishing if you want those to update.
 
@@ -14,10 +14,12 @@ This site does **not** expose `/posts`. That route lives on the blog API host. A
 
 Set these on the machine that runs `astro build` and the Node server (CI, Docker, or `.env` locally):
 
-| Variable         | Required                     | Description                                                                              |
-| ---------------- | ---------------------------- | ---------------------------------------------------------------------------------------- |
-| `BLOG_API_URL`   | No                           | Base URL of the API, with no trailing `/posts`. Defaults to `https://api.dastaran.com/`. |
-| `BLOG_API_TOKEN` | Preview, publish, and delete | Sent as `Authorization: Bearer <token>`. Also unlocks `/blog/preview/{slug}/`.           |
+| Variable       | Required | Description                                                                                                       |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `API_BASE_URL` | No       | API host only (no resource path). Defaults to `https://api.dastaran.com/`. Blog posts are `{API_BASE_URL}/posts`. |
+
+`BLOG_API_URL` is still read if `API_BASE_URL` is unset, so existing Coolify env vars keep working.
+| `BLOG_API_TOKEN` | Preview, publish, and delete | Sent as `Authorization: Bearer <token>`. Also unlocks `/blog/preview/{slug}/`. |
 
 ## Status
 
@@ -139,7 +141,7 @@ Coolify:
 2. Build command: `bun run build` (or `npm run build`).
 3. Start command: `node ./dist/server/entry.mjs` (`package.json` `start` script).
 4. Port **4321**, `HOST=0.0.0.0`, `PORT=4321`.
-5. `BLOG_API_URL` defaults to `https://api.dastaran.com/`. Override it as a **runtime** env var if needed (no trailing `/posts`). Set `BLOG_API_TOKEN` for preview/publish/delete.
+5. `API_BASE_URL` is the API host and defaults to `https://api.dastaran.com/`. Override it as a **runtime** env var if needed. Set `BLOG_API_TOKEN` for preview/publish/delete.
 
 Publishing a post:
 
