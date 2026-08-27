@@ -1,5 +1,4 @@
-import { useForm } from "@conform-to/react/future";
-import { getInputProps, getTextareaProps } from "@/lib/conform";
+import { useId, useState } from "react";
 import { Label } from "./ui/label";
 import { AtIcon } from "@phosphor-icons/react/dist/ssr/At";
 import { CheckCircleIcon } from "@phosphor-icons/react/dist/ssr/CheckCircle";
@@ -15,34 +14,85 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import FormMessage from "./FormMessage";
 import FormItem from "./FormItem";
-import { useActionState } from "react";
-import { withState } from "@astrojs/react/actions";
-import { actions } from "astro:actions";
-import { contactFormSchema } from "@/lib/definitions";
-import { getZodConstraint } from "@conform-to/zod/v4/future";
+import { contactPayloadSchema } from "@/lib/definitions";
+
+const SEND_ERROR = "Failed to send the message. Please try again later.";
+
+type FieldErrors = Partial<Record<string, Array<string>>>;
+
+function fieldErrorsFromZod(error: {
+  issues: Array<{ path: Array<PropertyKey>; message: string }>;
+}): FieldErrors {
+  const fieldErrors: FieldErrors = {};
+  for (const issue of error.issues) {
+    const key = String(issue.path[0] ?? "");
+    if (!key) {
+      continue;
+    }
+    const existing = fieldErrors[key] ?? [];
+    fieldErrors[key] = [...existing, issue.message];
+  }
+  return fieldErrors;
+}
 
 export default function ContactForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const [state, action, isPending] = useActionState(
-    withState(actions.contact),
-    null,
-  );
-  const { form, fields } = useForm(contactFormSchema, {
-    // This not only syncs the error from the server
-    // But is also used as the default value of the form
-    // in case the document is reloaded for progressive enhancement
-    lastResult: state?.data?.result,
-    constraint: getZodConstraint(contactFormSchema),
-    // Validate field once user leaves the field
-    shouldValidate: "onBlur",
-    // Then, revalidate field as user types again
-    shouldRevalidate: "onInput",
-    id: "contact",
-  });
+  const formId = useId();
+  const [isPending, setIsPending] = useState(false);
+  const [didSucceed, setDidSucceed] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-  const sendSuccessfully = state?.data?.success;
+  async function onSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const parsed = contactPayloadSchema.safeParse(
+      Object.fromEntries(new FormData(form).entries()),
+    );
+
+    if (!parsed.success) {
+      setDidSucceed(false);
+      setFormError(null);
+      setFieldErrors(fieldErrorsFromZod(parsed.error));
+      return;
+    }
+
+    setFieldErrors({});
+    setFormError(null);
+    setDidSucceed(false);
+    setIsPending(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parsed.data),
+      });
+
+      if (!response.ok) {
+        setFormError(SEND_ERROR);
+        return;
+      }
+
+      setDidSucceed(true);
+      form.reset();
+    } catch {
+      setFormError(SEND_ERROR);
+    } finally {
+      setIsPending(false);
+    }
+  }
+
+  const emailId = `${formId}-email`;
+  const nameId = `${formId}-name`;
+  const subjectId = `${formId}-subject`;
+  const phoneId = `${formId}-phone`;
+  const messageId = `${formId}-message`;
 
   return (
     <form
@@ -51,80 +101,88 @@ export default function ContactForm({
         offset-border @lg:grid-cols-2`,
         className,
       )}
+      noValidate
       {...props}
-      {...form.props}
-      action={action}
+      onSubmit={onSubmit}
     >
       <FormItem>
-        <Label htmlFor={fields.email.id}>
+        <Label htmlFor={emailId}>
           <AtIcon weight="duotone" size={20} />
           Email
         </Label>
         <Input
-          key={fields.email.key}
-          {...getInputProps(fields.email, { type: "email" })}
+          id={emailId}
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          aria-invalid={Boolean(fieldErrors.email)}
           placeholder="john.doe@example.com"
         />
-        <FormMessage id={fields.email.errorId}>
-          {fields.email.errors}
-        </FormMessage>
+        <FormMessage>{fieldErrors.email?.join(" ")}</FormMessage>
       </FormItem>
       <FormItem>
-        <Label htmlFor={fields.name.id}>
+        <Label htmlFor={nameId}>
           <IdentificationBadgeIcon weight="duotone" size={20} />
           Name
         </Label>
         <Input
-          key={fields.name.key}
-          {...getInputProps(fields.name, { type: "text" })}
+          id={nameId}
+          name="name"
+          type="text"
+          autoComplete="name"
+          aria-invalid={Boolean(fieldErrors.name)}
           placeholder="John Doe"
         />
-        <FormMessage id={fields.name.errorId}>{fields.name.errors}</FormMessage>
+        <FormMessage>{fieldErrors.name?.join(" ")}</FormMessage>
       </FormItem>
       <FormItem>
-        <Label htmlFor={fields.subject.id}>
+        <Label htmlFor={subjectId}>
           <TextboxIcon weight="duotone" size={20} />
           Subject
         </Label>
         <Input
-          key={fields.subject.key}
-          {...getInputProps(fields.subject, { type: "text" })}
+          id={subjectId}
+          name="subject"
+          type="text"
+          aria-invalid={Boolean(fieldErrors.subject)}
           placeholder="What can I help you with?"
         />
-        <FormMessage id={fields.subject.errorId}>
-          {fields.subject.errors}
-        </FormMessage>
+        <FormMessage>{fieldErrors.subject?.join(" ")}</FormMessage>
       </FormItem>
       <FormItem>
-        <Label htmlFor={fields.phone.id}>
+        <Label htmlFor={phoneId}>
           <PhoneTransferIcon weight="duotone" size={20} />
           Phone
         </Label>
         <Input
-          key={fields.phone.key}
-          {...getInputProps(fields.phone, { type: "text" })}
+          id={phoneId}
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          aria-invalid={Boolean(fieldErrors.phone)}
           placeholder="+49 12345 6789"
         />
-        <FormMessage id={fields.phone.errorId}>
-          {fields.phone.errors}
-        </FormMessage>
+        <FormMessage>{fieldErrors.phone?.join(" ")}</FormMessage>
       </FormItem>
 
       <FormItem className="@lg:col-span-2">
-        <Label htmlFor={fields.message.id}>
+        <Label htmlFor={messageId}>
           <TextAlignLeftIcon weight="duotone" size={20} />
           Message
         </Label>
         <Textarea
-          key={fields.message.key}
-          {...getTextareaProps(fields.message)}
+          id={messageId}
+          name="message"
+          required
+          minLength={10}
+          maxLength={500}
+          aria-invalid={Boolean(fieldErrors.message)}
           placeholder="Type your message here."
         />
-        <FormMessage id={fields.message.errorId}>
-          {fields.message.errors}
-        </FormMessage>
+        <FormMessage>{fieldErrors.message?.join(" ")}</FormMessage>
       </FormItem>
-      <div className="group/form-item hidden flex-col gap-2">
+      <div className="hidden" aria-hidden="true">
         <label>
           Company
           <input
@@ -135,18 +193,16 @@ export default function ContactForm({
           />
         </label>
       </div>
-      {form.errors && form.errors.length > 0 ? (
+      {formError ? (
         <FormMessage
           className="col-span-full items-start rounded-md border border-red-200
             bg-red-50 p-2 dark:border-red-900 dark:bg-red-950"
           iconSize={20}
         >
-          {form.errors.map((error, index) => (
-            <span key={index}>{error}</span>
-          ))}
+          {formError}
         </FormMessage>
       ) : null}
-      {sendSuccessfully && (
+      {didSucceed ? (
         <FormMessage
           className="col-span-full items-start rounded-md border border-sky-200
             bg-sky-50 p-2 text-sky-600 dark:border-sky-900 dark:bg-sky-950
@@ -157,7 +213,7 @@ export default function ContactForm({
           Thank you for your message! I will get back to you as soon as
           possible.
         </FormMessage>
-      )}
+      ) : null}
       <Button className="col-span-full" type="submit" disabled={isPending}>
         {isPending ? (
           <>
