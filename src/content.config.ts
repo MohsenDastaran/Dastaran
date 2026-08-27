@@ -1,36 +1,63 @@
 import { defineCollection, reference } from "astro:content";
-import { file, glob } from "astro/loaders";
-import { generateBlogId } from "./lib/utils";
+import { file } from "astro/loaders";
+import type { Loader } from "astro/loaders";
 import { z } from "astro/zod";
+import { fetchBlogPosts } from "./lib/blog-api";
+
+const DEFAULT_AUTHOR_ID = "MohsenDastaran";
+
+const blogLoader: Loader = {
+  name: "blog-api",
+  async load({ store, parseData, renderMarkdown, logger }) {
+    store.clear();
+    const posts = await fetchBlogPosts();
+
+    for (const post of posts) {
+      const authorIds = post.authors?.length
+        ? post.authors
+        : [DEFAULT_AUTHOR_ID];
+      const data = await parseData({
+        id: post.slug,
+        data: {
+          title: post.title,
+          description: post.description,
+          publicationDate: post.publicationDate,
+          modificationDate: post.modificationDate ?? undefined,
+          cover: post.cover ?? undefined,
+          tags: post.tags,
+          showComments: post.showComments,
+          authors: authorIds,
+        },
+      });
+      const rendered = await renderMarkdown(post.body);
+      store.set({
+        id: post.slug,
+        data,
+        body: post.body,
+        rendered,
+      });
+    }
+
+    logger.info(`Loaded ${String(posts.length)} blog post(s) from API`);
+  },
+};
 
 const blog = defineCollection({
-  // Load Markdown and MDX files in the `src/content/blog/` directory.
-  loader: glob({
-    base: "./src/content/blog",
-    pattern: "**/*.{md,mdx}",
-    // TODO: This function needs enhancement and tests. Having two articles in one folder without a "_" results in unexpected id generation etc.
-    generateId: ({ entry }) => generateBlogId(entry),
-  }),
-  // Type-check frontmatter using a schema
-  schema: ({ image }) =>
-    z
-      .object({
-        title: z.string(),
-        description: z.string(),
-        draft: z.boolean().default(false),
-        publicationDate: z.coerce.date(),
-        modificationDate: z.coerce.date().optional(),
-        cover: image().optional(),
-        tags: z.array(z.string().min(1)).optional(),
-        showComments: z.boolean().default(true),
-        authors: z.array(reference("authors")).default([
-          {
-            collection: "authors",
-            id: "MohsenDastaran",
-          },
-        ]),
-      })
-      .strict(),
+  loader: blogLoader,
+  schema: z
+    .object({
+      title: z.string(),
+      description: z.string(),
+      publicationDate: z.coerce.date(),
+      modificationDate: z.coerce.date().optional(),
+      cover: z.url().optional(),
+      tags: z.array(z.string().min(1)).optional(),
+      showComments: z.boolean().default(true),
+      authors: z
+        .array(reference("authors"))
+        .default([{ collection: "authors", id: DEFAULT_AUTHOR_ID }]),
+    })
+    .strict(),
 });
 
 const authors = defineCollection({

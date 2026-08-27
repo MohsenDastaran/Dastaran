@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import type { CollectionEntry } from "astro:content";
 import type { HTMLAttributes } from "astro/types";
 import { Badge, badgeVariants } from "./react/ui/badge";
-import { PencilIcon } from "@phosphor-icons/react/dist/ssr/Pencil";
 import { CalendarDotsIcon } from "@phosphor-icons/react/dist/ssr/CalendarDots";
 import { ClockCountdownIcon } from "@phosphor-icons/react/dist/ssr/ClockCountdown";
 
@@ -16,7 +15,7 @@ type Props = HTMLAttributes<"li"> & {
 };
 
 const {
-  post: { title, description, publicationDate, readingTime, draft, slug, tags },
+  post: { title, description, publicationDate, readingTime, slug, tags },
   class: className,
   ...props
 } = Astro.props;
@@ -54,16 +53,6 @@ const formattedPublicationDate = formatDate(
     class="z-10 flex flex-col gap-3 rounded-lg border-border p-4 hover:bg-muted"
   >
     <div class="flex gap-2 text-xs text-muted-foreground">
-      {
-        draft && (
-          <Badge
-            className="bg-orange-500/20 text-orange-600 dark:text-orange-400"
-          >
-            <PencilIcon size={16} weight="duotone" />
-            Draft
-          </Badge>
-        )
-      }
       <time
         class={cn(
           badgeVariants(),

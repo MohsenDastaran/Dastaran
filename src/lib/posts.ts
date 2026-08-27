@@ -1,4 +1,4 @@
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
 import { slugify } from "./utils";
 import type { MarkdownHeading } from "astro";
 import { estimateReadingTime } from "./readingTime";
@@ -7,11 +7,7 @@ export async function getPosts(options?: {
   take?: number;
   tag?: string | null;
 }) {
-  let posts = (
-    await getCollection("blog", ({ data }) =>
-      import.meta.env.PROD ? data.draft !== true : true,
-    )
-  ).map((post) => ({
+  let posts = (await getCollection("blog")).map((post) => ({
     ...post,
     readingTime: estimateReadingTime(post.body),
   }));
@@ -40,7 +36,7 @@ export async function getPosts(options?: {
  * and help search engines discover and connect the blog's content.
  */
 export async function getRelatedPosts(
-  currentPost: CollectionEntry<"blog">,
+  currentPost: { id: string; data: { tags?: Array<string> } },
   take = 2,
 ) {
   const currentTags = new Set(currentPost.data.tags ?? []);
@@ -58,9 +54,7 @@ export async function getRelatedPosts(
 }
 
 export async function getBlogTags() {
-  const posts = await getCollection("blog", ({ data }) =>
-    import.meta.env.PROD ? data.draft !== true : true,
-  );
+  const posts = await getCollection("blog");
   const tags = new Set<string>();
   posts.forEach(({ data }) => {
     data.tags?.forEach((tag) => tags.add(tag));

@@ -1,0 +1,67 @@
+---
+import BlogPost from "@/layouts/BlogPost.astro";
+import { estimateReadingTime } from "@/lib/readingTime";
+import { generatePostHeadings, getRelatedPosts } from "@/lib/posts";
+import { fetchBlogPost } from "@/lib/blog-api";
+import {
+  grantBlogAdmin,
+  isBlogAdmin,
+  isBlogAdminToken,
+} from "@/lib/blog-admin";
+import { renderBlogMarkdown } from "@/lib/render-blog-markdown";
+import MarkdownBody from "@/components/MarkdownBody.astro";
+
+export const prerender = false;
+
+const slug = Astro.params.slug;
+if (!slug) {
+  return Astro.rewrite("/404");
+}
+
+const token = Astro.url.searchParams.get("token");
+if (isBlogAdminToken(token)) {
+  grantBlogAdmin(Astro.cookies);
+  return Astro.redirect(`/blog/preview/${slug}/`);
+}
+
+if (!isBlogAdmin(Astro.cookies)) {
+  return Astro.rewrite("/404");
+}
+
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow");
+
+const post = await fetchBlogPost(slug);
+if (!post) {
+  return Astro.rewrite("/404");
+}
+
+const readingTime = estimateReadingTime(post.body);
+const { html, headings: markdownHeadings } = await renderBlogMarkdown(
+  post.body,
+);
+const headings = generatePostHeadings(markdownHeadings);
+const relatedPosts = await getRelatedPosts({
+  id: post.slug,
+  data: { tags: post.tags },
+});
+
+const authorIds = post.authors?.length ? post.authors : ["MohsenDastaran"];
+---
+
+<BlogPost
+  isPreview
+  slug={post.slug}
+  title={post.title}
+  description={post.description}
+  publicationDate={post.publicationDate}
+  modificationDate={post.modificationDate ?? undefined}
+  cover={post.cover ?? undefined}
+  tags={post.tags}
+  showComments={post.showComments}
+  authors={authorIds.map((id) => ({ collection: "authors", id }))}
+  readingTime={readingTime}
+  headings={headings}
+  relatedPosts={relatedPosts}
+>
+  <MarkdownBody html={html} />
+</BlogPost>

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog with MDX, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
+Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog loaded from a backend API at build time, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
 
 ## Commands
 
@@ -18,7 +18,7 @@ Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React
 
 Content collections defined in `src/content.config.ts` with Zod schemas:
 
-- **blog** — MDX files in `src/content/blog/`, glob loader.
+- **blog** — Published Markdown posts fetched at build time from `GET {BLOG_API_URL}/posts` via a custom loader in `src/content.config.ts`. Under-review posts are previewed at `/blog/preview/{slug}/`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
 - **authors** — JSON file at `src/data/authors.json`, referenced by blog posts
 - **career** — JSON file at `src/data/career.json` (work/education entries)
 - **projects** — JSON file at `src/data/projects.json`
@@ -28,7 +28,7 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 - `src/layouts/RootLayout.astro` — Base layout (navbar, footer, SEO head)
 - `src/layouts/BlogPost.astro` — Blog post wrapper (metadata, TOC, reading time, view count, comments)
 - Pages in `src/pages/` follow Astro file-based routing
-- API endpoints: `src/pages/api/chat/` (AI chat)
+- API endpoints: `src/pages/api/chat/` (AI chat), `src/pages/api/blog/` (admin publish/delete)
 
 ### Components
 
@@ -40,6 +40,7 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 ### Key Utilities
 
 - `src/lib/utils.ts` — `cn()` for Tailwind class merging, `slugify()`
+- `src/lib/blog-api.ts` — Fetch and Zod-parse blog posts from the backend API
 - `src/lib/posts.ts` — Blog collection queries, TOC generation
 - `src/lib/shiki/` — Custom Shiki transformers for code blocks (line numbers, diff highlighting, meta highlights, file icons)
 - `src/lib/og/` — Open Graph image generation
@@ -63,35 +64,36 @@ Drizzle ORM + libSQL (Turso in production, local file in dev) with a `ViewCount`
 
 ## Writing Blog Posts
 
-### File Structure
+Posts live in the backend, not in this repo. The site fetches Markdown `body` strings at build time. Do **not** recreate `src/content/blog/` or add local `.mdx` files.
 
-Each blog post lives in its own folder under `src/content/blog/`. The folder name becomes the URL slug. The MDX file is named `article.mdx`, and images sit alongside it in the same folder.
+Full API contract, env vars, and deploy notes: [docs/BLOG_API.md](./docs/BLOG_API.md).
 
-```
-src/content/blog/my-post-slug/
-├── article.mdx
-├── cover-image.webp
-└── screenshot.png
-```
+### Payload
 
-Exception: folders prefixed with `_` (like `_tailwindcss-tips/`) contain multiple articles - in that case the file name becomes the slug.
+Draft the post as JSON matching `GET /posts` (plus a Markdown `body`):
 
-### Frontmatter
-
-```yaml
----
-title: "How to do something useful in React Router 7"
-description: "Learn how to do X with Y for better Z."
-publicationDate: "2026-03-01T12:00:00Z"
-tags: ["React Router 7", "SEO", "Tips and Tricks"]
-cover: "./cover-image.webp"
----
+```json
+{
+  "slug": "how-to-do-something-useful",
+  "title": "How to do something useful in React Router 7",
+  "description": "Learn how to do X with Y for better Z.",
+  "publicationDate": "2026-03-01T12:00:00Z",
+  "tags": ["React Router 7", "SEO", "Tips and Tricks"],
+  "cover": "https://cdn.example.com/blog/how-to-do-something-useful/cover.webp",
+  "status": "under-review",
+  "body": "I ran into this when...\n"
+}
 ```
 
-- `draft: true` to hide from production
+- `status: "under-review"` until the admin publishes from `/blog/preview/{slug}/`
+- `status: "published"` after approval (`GET /posts` returns published posts only)
 - `modificationDate` when updating an existing post
 - `showComments: false` only for non-technical or personal posts
 - Tags are capitalized naturally (e.g. "React Router 7", "Tips and Tricks", "SEO")
+- Cover and inline images must be absolute `https` URLs
+- `body` is Markdown only - no JSX imports or Astro components
+
+After publish, rebuild the Astro site so `/blog/{slug}/`, the sitemap, and RSS update.
 
 ### Writing Style
 
@@ -116,21 +118,9 @@ Key patterns:
 - Start with a brief intro (no heading) that sets context and motivation
 - End naturally, often with a short closing thought or invitation for feedback - not a heavy "conclusion" section
 
-### MDX Components
+### Markdown
 
-Common imports used across posts:
-
-```mdx
-import Alert from "@/components/Alert.astro";
-import ProfileBadge from "@/components/ProfileBadge.astro";
-```
-
-- `<Alert>` - for tips, warnings, info boxes, and questions. Types: `tip`, `warning`, `info`, `question`. Use `title` prop for custom headings.
-- `<ProfileBadge>` - for linking to GitHub repos/profiles inline
-
-### Code Blocks
-
-Fenced code blocks support these meta options:
+No JSX imports. Callouts can be blockquotes (`> **Tip:** ...`). Code fences still support:
 
 - `filename="path/to/file.ts"` - shows a file name header
 - `showLineNumbers` - enables line numbers

@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BlogPost from "@/layouts/BlogPost.astro";
+import { estimateReadingTime } from "@/lib/readingTime";
+import { getRelatedPosts, generatePostHeadings } from "@/lib/posts";
+import { renderBlogMarkdown } from "@/lib/render-blog-markdown";
+import MarkdownBody from "@/components/MarkdownBody.astro";
+
+type Props = {
+  post: CollectionEntry<"blog">;
+};
+
+const { post } = Astro.props;
+const readingTime = estimateReadingTime(post.body);
+const renderedHtml = post.rendered?.html;
+const renderedHeadings = post.rendered?.metadata?.headings;
+const markdown =
+  renderedHtml !== undefined
+    ? { html: renderedHtml, headings: renderedHeadings ?? [] }
+    : await renderBlogMarkdown(post.body ?? "");
+const headings = generatePostHeadings(markdown.headings);
+const relatedPosts = await getRelatedPosts(post);
+---
+
+<BlogPost
+  readingTime={readingTime}
+  headings={headings}
+  relatedPosts={relatedPosts}
+  slug={post.id}
+  {...post.data}
+>
+  <MarkdownBody html={markdown.html} />
+</BlogPost>

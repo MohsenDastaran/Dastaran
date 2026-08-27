@@ -1,11 +1,7 @@
 ---
-import { type CollectionEntry, render } from "astro:content";
-import BlogPost from "@/layouts/BlogPost.astro";
-import { estimateReadingTime } from "@/lib/readingTime";
-import { getPosts, getRelatedPosts, generatePostHeadings } from "@/lib/posts";
-import BlogImage from "@/components/BlogImage.astro";
-import BlogLink from "@/components/BlogLink.astro";
-import CodeBlock from "@/components/CodeBlock.astro";
+import { type CollectionEntry } from "astro:content";
+import BlogPostView from "@/components/BlogPostView.astro";
+import { getPosts } from "@/lib/posts";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -14,21 +10,10 @@ export async function getStaticPaths() {
     props: post,
   }));
 }
+
 type Props = CollectionEntry<"blog">;
 
 const post = Astro.props;
-const readingTime = estimateReadingTime(post.body);
-const { Content, headings: getHeadings } = await render(post);
-const headings = generatePostHeadings(getHeadings);
-const relatedPosts = await getRelatedPosts(post);
 ---
 
-<BlogPost
-  readingTime={readingTime}
-  headings={headings}
-  relatedPosts={relatedPosts}
-  {...post.data}
->
-  <!-- TODO: Prevent empty paragraphs from being created for img  -->
-  <Content components={{ img: BlogImage, a: BlogLink, pre: CodeBlock }} />
-</BlogPost>
+<BlogPostView post={post} />
