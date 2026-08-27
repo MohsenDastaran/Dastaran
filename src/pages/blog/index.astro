@@ -24,11 +24,6 @@ const tags = await getBlogTags();
 const filteredTag = tags.find(({ slug }) => slug === tag);
 
 const posts = await getPosts({ tag: filteredTag?.name });
-// log in dev console
-setTimeout(() => {
-  console.log(posts);
-}, 5000);
-console.log(posts);
 
 const schemaPosts = await Promise.all(
   posts.map(async ({ data, id: slug }) => {
@@ -64,6 +59,16 @@ const schemaPosts = await Promise.all(
 );
 
 const hasFilteredTag = filteredTag !== undefined;
+const isDev = import.meta.env.DEV;
+const debugPosts = isDev
+  ? posts.map(({ id, data, readingTime }) => ({
+      id,
+      title: data.title,
+      tags: data.tags,
+      publicationDate: data.publicationDate.toISOString(),
+      readingTime,
+    }))
+  : [];
 ---
 
 <RootLayout>
@@ -189,6 +194,12 @@ const hasFilteredTag = filteredTag !== undefined;
     </p>
   </div>
 </RootLayout>
+
+<script define:vars={{ isDev, debugPosts }}>
+  if (isDev) {
+    console.info("[blog] posts", debugPosts);
+  }
+</script>
 
 <script>
   const input = document.getElementById(
