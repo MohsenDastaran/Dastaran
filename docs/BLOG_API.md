@@ -19,7 +19,7 @@ Set these on the machine that runs `astro build` and the Node server (CI, Docker
 | `API_BASE_URL` | No       | API host only (no resource path). Defaults to `https://api.dastaran.com/`. Blog posts are `{API_BASE_URL}/posts`. |
 
 `BLOG_API_URL` is still read if `API_BASE_URL` is unset, so existing Coolify env vars keep working.
-| `BLOG_API_TOKEN` | Preview, publish, and delete | Sent as `Authorization: Bearer <token>`. Also unlocks `/blog/preview/{slug}/`. |
+| `BLOG_API_TOKEN` | Yes, for this API | Bearer token. `GET /posts` is empty and `GET /posts/:slug` is 401 without it. Also unlocks preview/publish/delete. |
 
 ## Status
 

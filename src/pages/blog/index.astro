@@ -59,16 +59,6 @@ const schemaPosts = await Promise.all(
 );
 
 const hasFilteredTag = filteredTag !== undefined;
-const isDev = import.meta.env.DEV;
-const debugPosts = isDev
-  ? posts.map(({ id, data, readingTime }) => ({
-      id,
-      title: data.title,
-      tags: data.tags,
-      publicationDate: data.publicationDate.toISOString(),
-      readingTime,
-    }))
-  : [];
 ---
 
 <RootLayout>
@@ -194,12 +184,6 @@ const debugPosts = isDev
     </p>
   </div>
 </RootLayout>
-
-<script define:vars={{ isDev, debugPosts }}>
-  if (isDev) {
-    console.info("[blog] posts", debugPosts);
-  }
-</script>
 
 <script>
   const input = document.getElementById(

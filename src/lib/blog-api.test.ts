@@ -28,6 +28,14 @@ describe("blogPostApiSchema", () => {
     expect(parsed.showComments).toBe(true);
   });
 
+  it("normalizes a capitalized status", () => {
+    const parsed = blogPostApiSchema.parse({
+      ...swaggerExample,
+      status: "Published",
+    });
+    expect(parsed.status).toBe("published");
+  });
+
   it("accepts SQLite-ish nulls and JSON-encoded tags", () => {
     const parsed = blogPostApiSchema.parse({
       slug: "sqlite-post",

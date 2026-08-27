@@ -1,6 +1,8 @@
 ---
 import ErrorPageLayout from "@/layouts/ErrorPageLayout.astro";
 
+export const prerender = false;
+
 type Props = {
   error: unknown;
 };

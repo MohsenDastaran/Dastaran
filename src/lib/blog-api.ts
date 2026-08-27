@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { apiUrl, readEnv } from "./api";
+import { apiUrl, getBlogApiToken } from "./api";
+
+export { getBlogApiToken };
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -80,9 +82,12 @@ export const blogPostApiSchema = z.object({
     .transform((value) => value.trim())
     .refine((value) => SLUG_PATTERN.test(value), "slug must be kebab-case"),
   title: z.string().min(1),
-  description: z.string().min(1),
-  body: z.string(),
-  status: z.enum(BLOG_STATUSES).optional().default("published"),
+  description: z.string().optional().default(""),
+  body: z.preprocess((value) => (value == null ? "" : value), z.string()),
+  status: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim().toLowerCase() : value),
+    z.enum(BLOG_STATUSES).optional().default("published"),
+  ),
   publicationDate: z.coerce.date(),
   modificationDate: z.preprocess(
     (value) => (value === "" || value === null ? undefined : value),
@@ -113,10 +118,6 @@ const postResponseSchema = z.union([
   blogPostApiSchema,
   z.object({ post: blogPostApiSchema }),
 ]);
-
-export function getBlogApiToken() {
-  return readEnv("BLOG_API_TOKEN");
-}
 
 function postsUrl(slug?: string) {
   return slug ? apiUrl(`/posts/${encodeURIComponent(slug)}`) : apiUrl("/posts");
@@ -179,6 +180,11 @@ function parsePostPayload(payload: unknown): BlogPostApi | null {
 }
 
 async function loadBlogPosts(): Promise<Array<BlogPostApi>> {
+  if (!getBlogApiToken()) {
+    console.warn(
+      "BLOG_API_TOKEN is not set. This API returns an empty GET /posts and 401 for GET /posts/:slug without a bearer token.",
+    );
+  }
   try {
     const response = await fetch(postsUrl(), {
       headers: apiHeaders(),
@@ -188,6 +194,11 @@ async function loadBlogPosts(): Promise<Array<BlogPostApi>> {
       console.warn(
         `Blog API request failed (${response.status} ${response.statusText}); blog collection will be empty.`,
       );
+      if (response.status === 401 && !getBlogApiToken()) {
+        console.warn(
+          "BLOG_API_TOKEN is not set. GET /posts is empty without auth and GET /posts/:slug returns 401.",
+        );
+      }
       return [];
     }
     return parsePostsPayload(await response.json());
@@ -216,15 +227,23 @@ export async function fetchBlogPosts(): Promise<Array<BlogPostApi>> {
 export async function fetchPublishedBlogPost(
   slug: string,
 ): Promise<BlogPostApi | null> {
-  const fromList = (await fetchBlogPosts()).find((post) => post.slug === slug);
+  let decoded = slug;
+  try {
+    decoded = decodeURIComponent(slug);
+  } catch {
+    decoded = slug;
+  }
+  const fromList = (await fetchBlogPosts()).find(
+    (post) => post.slug === decoded || post.slug === slug,
+  );
   if (fromList) {
     return fromList;
   }
-  const bySlug = await fetchBlogPost(slug);
-  if (bySlug?.status === "published") {
-    return bySlug;
+  const bySlug = await fetchBlogPost(decoded);
+  if (!bySlug || bySlug.status === "under-review") {
+    return null;
   }
-  return null;
+  return bySlug;
 }
 
 /** Fetch one post by slug, including under-review posts. Returns null on 404. */
