@@ -20,20 +20,14 @@ import { MonitorIcon } from "@phosphor-icons/react/dist/ssr/Monitor";
     data-theme="dark"
     weight="duotone"
   />
-  <MonitorIcon
-    className="theme-icon size-6 sm:size-5"
-    data-theme="system"
-    weight="duotone"
-  />
+
 </button>
 
 <style>
   .theme-icon {
     display: none;
   }
-  :global([data-theme="system"]) .theme-icon[data-theme="system"] {
-    display: block;
-  }
+
   :global([data-theme="light"]) .theme-icon[data-theme="light"] {
     display: block;
   }
@@ -61,7 +55,7 @@ import { MonitorIcon } from "@phosphor-icons/react/dist/ssr/Monitor";
     );
     document.documentElement.setAttribute(
       "data-theme",
-      "theme" in localStorage ? localStorage.theme : "system",
+      "theme" in localStorage ? localStorage.theme : "dark",
     );
   });
 </script>
