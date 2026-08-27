@@ -16,6 +16,9 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.env*.local
+.env*
+!.env.example
 
 # macOS-specific files
 .DS_Store
@@ -23,12 +26,9 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-.env*.local
-
 # claude
 # Track shared skills/commands/settings, ignore only personal local settings
 .claude/settings.local.json
-.env*
 
 # AI SDK DevTools local capture
 .devtools/
