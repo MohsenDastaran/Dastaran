@@ -213,20 +213,6 @@ const articleImage = coverImageURL
             </Badge>
           ) : null
         }
-        {
-          !isPreview ? (
-            <>
-              <span>•</span>
-              <ViewCount
-                server:defer
-                pathname={pathname}
-                usePost={" ".repeat(2048)}
-              >
-                <Skeleton slot="fallback" class="h-5 w-8" />
-              </ViewCount>
-            </>
-          ) : null
-        }
       </div>
       <p class="text-muted-foreground">
         {description}
