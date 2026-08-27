@@ -2,7 +2,7 @@
 import BlogPost from "@/layouts/BlogPost.astro";
 import { estimateReadingTime } from "@/lib/readingTime";
 import { generatePostHeadings, getRelatedPosts } from "@/lib/posts";
-import { fetchBlogPost } from "@/lib/blog-api";
+import { fetchBlogPost, resolveAuthorIds } from "@/lib/blog-api";
 import {
   grantBlogAdmin,
   isBlogAdmin,
@@ -45,7 +45,7 @@ const relatedPosts = await getRelatedPosts({
   data: { tags: post.tags },
 });
 
-const authorIds = post.authors?.length ? post.authors : ["MohsenDastaran"];
+const authorIds = resolveAuthorIds(post.authors);
 ---
 
 <BlogPost

@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import type { BlogPostCard } from "@/lib/posts";
 import BaseHead from "../components/BaseHead.astro";
 import RootLayout from "./RootLayout.astro";
 import type { ReadingTime } from "@/lib/readingTime";
@@ -24,7 +25,7 @@ import BlogPreviewActions from "@/components/react/BlogPreviewActions";
 type Props = CollectionEntry<"blog">["data"] & {
   readingTime: ReadingTime;
   headings: Array<TocEntry>;
-  relatedPosts?: Array<CollectionEntry<"blog"> & { readingTime: number }>;
+  relatedPosts?: Array<BlogPostCard>;
   isPreview?: boolean;
   slug?: string;
 };

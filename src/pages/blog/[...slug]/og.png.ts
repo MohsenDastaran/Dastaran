@@ -1,25 +1,24 @@
 import { generateOG } from "@/lib/og/generate-og";
-import type { APIRoute, InferGetStaticPropsType } from "astro";
-import type { GetStaticPaths } from "astro";
-import { getPosts } from "@/lib/posts";
+import type { APIRoute } from "astro";
+import { fetchPublishedBlogPost } from "@/lib/blog-api";
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+export const prerender = false;
 
-export const GET: APIRoute<Props> = async ({ props, url }) => {
-  const { title, description } = props;
-  const { origin } = url;
-  return generateOG({ title, description, origin });
+export const GET: APIRoute = async ({ params, url }) => {
+  const slugParam = params.slug;
+  const slug = Array.isArray(slugParam) ? slugParam.join("/") : slugParam;
+  if (!slug) {
+    return new Response(null, { status: 404 });
+  }
+
+  const post = await fetchPublishedBlogPost(slug);
+  if (!post || post.cover) {
+    return new Response(null, { status: 404 });
+  }
+
+  return generateOG({
+    title: post.title,
+    description: post.description,
+    origin: url.origin,
+  });
 };
-
-export const getStaticPaths = (async () => {
-  const posts = (await getPosts()).filter((post) => !post.data.cover);
-  return posts.map(({ id, data: { title, description } }) => ({
-    params: {
-      slug: id,
-    },
-    props: {
-      title,
-      description,
-    },
-  }));
-}) satisfies GetStaticPaths;

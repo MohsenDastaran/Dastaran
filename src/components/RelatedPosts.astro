@@ -1,12 +1,10 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import type { BlogPostCard } from "@/lib/posts";
 import PostTeaser from "@/components/PostTeaser.astro";
 import { ArticleNyTimesIcon } from "@phosphor-icons/react/dist/ssr/ArticleNyTimes";
 
-type RelatedPost = CollectionEntry<"blog"> & { readingTime: number };
-
 type Props = {
-  posts: Array<RelatedPost>;
+  posts: Array<BlogPostCard>;
 };
 
 const { posts } = Astro.props;

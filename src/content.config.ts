@@ -2,9 +2,7 @@ import { defineCollection, reference } from "astro:content";
 import { file } from "astro/loaders";
 import type { Loader } from "astro/loaders";
 import { z } from "astro/zod";
-import { fetchBlogPosts } from "./lib/blog-api";
-
-const DEFAULT_AUTHOR_ID = "MohsenDastaran";
+import { fetchBlogPosts, resolveAuthorIds } from "./lib/blog-api";
 
 const blogLoader: Loader = {
   name: "blog-api",
@@ -13,9 +11,7 @@ const blogLoader: Loader = {
     const posts = await fetchBlogPosts();
 
     for (const post of posts) {
-      const authorIds = post.authors?.length
-        ? post.authors
-        : [DEFAULT_AUTHOR_ID];
+      const authorIds = resolveAuthorIds(post.authors);
       const data = await parseData({
         id: post.slug,
         data: {
@@ -50,12 +46,12 @@ const blog = defineCollection({
       description: z.string(),
       publicationDate: z.coerce.date(),
       modificationDate: z.coerce.date().optional(),
-      cover: z.url().optional(),
+      cover: z.string().optional(),
       tags: z.array(z.string().min(1)).optional(),
       showComments: z.boolean().default(true),
       authors: z
         .array(reference("authors"))
-        .default([{ collection: "authors", id: DEFAULT_AUTHOR_ID }]),
+        .default([{ collection: "authors", id: "MohsenDastaran" }]),
     })
     .strict(),
 });

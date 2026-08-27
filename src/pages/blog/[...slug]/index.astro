@@ -1,19 +1,49 @@
 ---
-import { type CollectionEntry } from "astro:content";
-import BlogPostView from "@/components/BlogPostView.astro";
-import { getPosts } from "@/lib/posts";
+import BlogPost from "@/layouts/BlogPost.astro";
+import { estimateReadingTime } from "@/lib/readingTime";
+import { generatePostHeadings, getRelatedPosts } from "@/lib/posts";
+import { fetchPublishedBlogPost, resolveAuthorIds } from "@/lib/blog-api";
+import { renderBlogMarkdown } from "@/lib/render-blog-markdown";
+import MarkdownBody from "@/components/MarkdownBody.astro";
 
-export async function getStaticPaths() {
-  const posts = await getPosts();
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: post,
-  }));
+export const prerender = false;
+
+const slugParam = Astro.params.slug;
+const slug = Array.isArray(slugParam) ? slugParam.join("/") : slugParam;
+if (!slug) {
+  return Astro.rewrite("/404");
 }
 
-type Props = CollectionEntry<"blog">;
+const post = await fetchPublishedBlogPost(slug);
+if (!post) {
+  return Astro.rewrite("/404");
+}
 
-const post = Astro.props;
+const readingTime = estimateReadingTime(post.body);
+const { html, headings: markdownHeadings } = await renderBlogMarkdown(
+  post.body,
+);
+const headings = generatePostHeadings(markdownHeadings);
+const relatedPosts = await getRelatedPosts({
+  id: post.slug,
+  data: { tags: post.tags },
+});
+const authorIds = resolveAuthorIds(post.authors);
 ---
 
-<BlogPostView post={post} />
+<BlogPost
+  slug={post.slug}
+  title={post.title}
+  description={post.description}
+  publicationDate={post.publicationDate}
+  modificationDate={post.modificationDate ?? undefined}
+  cover={post.cover ?? undefined}
+  tags={post.tags}
+  showComments={post.showComments}
+  authors={authorIds.map((id) => ({ collection: "authors", id }))}
+  readingTime={readingTime}
+  headings={headings}
+  relatedPosts={relatedPosts}
+>
+  <MarkdownBody html={html} />
+</BlogPost>

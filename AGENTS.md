@@ -18,7 +18,7 @@ Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React
 
 Content collections defined in `src/content.config.ts` with Zod schemas:
 
-- **blog** — Published Markdown posts fetched at build time from `GET {BLOG_API_URL}/posts` via a custom loader in `src/content.config.ts`. Under-review posts are previewed at `/blog/preview/{slug}/`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
+- **blog** — Published Markdown posts from `GET {BLOG_API_URL}/posts`. `/blog/` and `/blog/{slug}/` fetch at request time; the content loader still runs at build for sitemap/RSS. Under-review posts are previewed at `/blog/preview/{slug}/`. See [docs/BLOG_API.md](./docs/BLOG_API.md). Do not create files under `src/content/blog/`.
 - **authors** — JSON file at `src/data/authors.json`, referenced by blog posts
 - **career** — JSON file at `src/data/career.json` (work/education entries)
 - **projects** — JSON file at `src/data/projects.json`

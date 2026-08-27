@@ -2,15 +2,57 @@ import { getCollection } from "astro:content";
 import { slugify } from "./utils";
 import type { MarkdownHeading } from "astro";
 import { estimateReadingTime } from "./readingTime";
+import { fetchBlogPosts, resolveAuthorIds, type BlogPostApi } from "./blog-api";
+
+export type BlogPostCard = {
+  id: string;
+  body?: string;
+  data: {
+    title: string;
+    description: string;
+    publicationDate: Date;
+    modificationDate?: Date;
+    cover?: string;
+    tags?: Array<string>;
+    showComments: boolean;
+    authors: Array<{ collection: "authors"; id: string }>;
+  };
+  readingTime: number;
+};
+
+export function toBlogPostCard(post: BlogPostApi): BlogPostCard {
+  const authorIds = resolveAuthorIds(post.authors);
+  return {
+    id: post.slug,
+    body: post.body,
+    data: {
+      title: post.title,
+      description: post.description,
+      publicationDate: post.publicationDate,
+      modificationDate: post.modificationDate ?? undefined,
+      cover: post.cover ?? undefined,
+      tags: post.tags,
+      showComments: post.showComments,
+      authors: authorIds.map((id) => ({ collection: "authors", id })),
+    },
+    readingTime: estimateReadingTime(post.body),
+  };
+}
 
 export async function getPosts(options?: {
   take?: number;
   tag?: string | null;
 }) {
-  let posts = (await getCollection("blog")).map((post) => ({
-    ...post,
-    readingTime: estimateReadingTime(post.body),
-  }));
+  const apiPosts = await fetchBlogPosts();
+  const collectionPosts =
+    apiPosts.length > 0 ? [] : await getCollection("blog");
+  let posts: Array<BlogPostCard> =
+    apiPosts.length > 0
+      ? apiPosts.map(toBlogPostCard)
+      : collectionPosts.map((post) => ({
+          ...post,
+          readingTime: estimateReadingTime(post.body),
+        }));
 
   const { tag, take } = options || {};
 
@@ -40,7 +82,7 @@ export async function getRelatedPosts(
   take = 2,
 ) {
   const currentTags = new Set(currentPost.data.tags ?? []);
-  const sharedTagCount = (post: CollectionEntry<"blog">) =>
+  const sharedTagCount = (post: BlogPostCard) =>
     (post.data.tags ?? []).filter((tag) => currentTags.has(tag)).length;
 
   return (await getPosts())
@@ -54,7 +96,7 @@ export async function getRelatedPosts(
 }
 
 export async function getBlogTags() {
-  const posts = await getCollection("blog");
+  const posts = await getPosts();
   const tags = new Set<string>();
   posts.forEach(({ data }) => {
     data.tags?.forEach((tag) => tags.add(tag));

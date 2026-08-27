@@ -1,28 +1,32 @@
 # Blog API
 
-The Astro site loads **published** blog posts **at build time** from a backend HTTP API. Those posts are prerendered to `/blog/{slug}/`, which is what makes them appear on `/blog`, the sitemap, RSS feed, `llms.txt`, and Open Graph images.
+The Astro site loads **published** blog posts from `GET {BLOG_API_URL}/posts`. `/blog/` and `/blog/{slug}/` are SSR and fetch that list at **request time**, so new published posts show up without a rebuild.
 
-Posts that are still **under review** are not built into the site. Admins preview them at `/blog/preview/{slug}/` (SSR, noindex, not linked from the navbar). Publishing from that page updates the backend; **rebuild and redeploy this site** so the public URL, sitemap, and RSS pick up the change.
+The sitemap, RSS feed, and `llms.txt` are still generated at **build time**. Rebuild after publishing if you want those to update.
 
-If `BLOG_API_URL` is unset or the request fails, the build still succeeds with an empty blog (a warning is logged).
+Posts that are still **under review** stay off the public site. Admins preview them at `/blog/preview/{slug}/` (SSR, noindex, not linked from the navbar).
+
+If the API request fails, the build still succeeds and the public blog renders empty (a warning is logged).
+
+This site does **not** expose `/posts`. That route lives on the blog API host. A 404 for `/posts` on `dastaran.com` is expected.
 
 ## Environment
 
 Set these on the machine that runs `astro build` and the Node server (CI, Docker, or `.env` locally):
 
-| Variable         | Required                     | Description                                                                        |
-| ---------------- | ---------------------------- | ---------------------------------------------------------------------------------- |
-| `BLOG_API_URL`   | For loading posts            | Base URL of the API, with no trailing `/posts`. Example: `https://api.example.com` |
-| `BLOG_API_TOKEN` | Preview, publish, and delete | Sent as `Authorization: Bearer <token>`. Also unlocks `/blog/preview/{slug}/`.     |
+| Variable         | Required                     | Description                                                                              |
+| ---------------- | ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `BLOG_API_URL`   | No                           | Base URL of the API, with no trailing `/posts`. Defaults to `https://api.dastaran.com/`. |
+| `BLOG_API_TOKEN` | Preview, publish, and delete | Sent as `Authorization: Bearer <token>`. Also unlocks `/blog/preview/{slug}/`.           |
 
 ## Status
 
 Every post has exactly one status:
 
-| Status         | Meaning                                         | Public site                                      |
-| -------------- | ----------------------------------------------- | ------------------------------------------------ |
-| `under-review` | Written, waiting for admin approval             | Hidden. Preview only at `/blog/preview/{slug}/`. |
-| `published`    | Approved. `GET /posts` returns these by default | Built to `/blog/{slug}/` on the next site build. |
+| Status         | Meaning                                         | Public site                                       |
+| -------------- | ----------------------------------------------- | ------------------------------------------------- |
+| `under-review` | Written, waiting for admin approval             | Hidden. Preview only at `/blog/preview/{slug}/`.  |
+| `published`    | Approved. `GET /posts` returns these by default | Listed on `/blog/` and served at `/blog/{slug}/`. |
 
 New posts should be created as `under-review`. The admin Publish button sets `status` to `published`.
 
@@ -75,7 +79,7 @@ Required for the admin preview page. Return the same JSON object as one element 
 - Require `Authorization: Bearer <token>` (same as `BLOG_API_TOKEN`).
 - `404` when the slug does not exist.
 
-The public listing never calls this. The site uses it only at `/blog/preview/{slug}/`.
+Public `/blog/{slug}/` pages use `GET /posts` and match the slug. They do not need this endpoint. The site uses `GET /posts/:slug` only at `/blog/preview/{slug}/`.
 
 ## `PATCH /posts/:slug`
 
@@ -100,7 +104,7 @@ Require bearer auth. Suggested responses: `204` on success, `404` if missing.
 1. Create the post as `under-review`.
 2. Open `https://www.dastaran.com/blog/preview/{slug}/?token=<BLOG_API_TOKEN>` once. The site stores an httpOnly cookie and redirects to the same path without the token in the URL.
 3. Review the rendered post. Use **Publish** or **Delete**.
-4. After publish, rebuild this Astro site so `/blog/{slug}/` exists for readers.
+4. After publish, `/blog/{slug}/` is available immediately. Rebuild if you also want sitemap, RSS, and `llms.txt` updated.
 
 The preview route is SSR (`prerender = false`), sends `noindex`, is disallowed in `robots.txt`, is excluded from the sitemap, and is not linked from the navbar.
 
@@ -127,11 +131,21 @@ Protect `GET /posts/:slug` (when it can return under-review posts), `PATCH`, and
 
 ## Deploy
 
+This is a **Node** app (`@astrojs/node` standalone), not a static site. `/blog/` is SSR (`prerender = false`). If Coolify (or nginx) serves `dist/client` as static files, `/blog/` and `/blog/{slug}/` return **404** because those HTML files are not generated.
+
+Coolify:
+
+1. Disable "Static site" / nginx SPA. Use Nixpacks or a Dockerfile that runs Node.
+2. Build command: `bun run build` (or `npm run build`).
+3. Start command: `node ./dist/server/entry.mjs` (`package.json` `start` script).
+4. Port **4321**, `HOST=0.0.0.0`, `PORT=4321`.
+5. `BLOG_API_URL` defaults to `https://api.dastaran.com/`. Override it as a **runtime** env var if needed (no trailing `/posts`). Set `BLOG_API_TOKEN` for preview/publish/delete.
+
+Publishing a post:
+
 1. Create the post as `under-review` and preview it.
 2. Publish from `/blog/preview/{slug}/` (or set `status: "published"` in the backend).
-3. Rebuild this Astro site (`bun run build` / CI) and deploy.
-
-Until step 3, `/blog/{slug}/`, `sitemap-index.xml`, `rss.xml`, and `llms.txt` still show the previous snapshot. `/blog` only lists posts from the last build's `GET /posts`.
+3. Public listing and post pages pick it up on the next request. Rebuild for sitemap, RSS, and `llms.txt`.
 
 ## Backend stack
 

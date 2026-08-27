@@ -24,7 +24,8 @@
     "lint": "eslint",
     "lint:inspect": "eslint --inspect-config",
     "test": "vitest",
-    "preview": "dotenv astro preview"
+    "preview": "dotenv astro preview",
+    "start": "node ./dist/server/entry.mjs"
   },
   "dependencies": {
     "@ai-sdk/devtools": "1.0.0",
