@@ -39,7 +39,10 @@ const educationExperiences = career.filter(
   <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} slot="head">
     <Schema item={profilePageSchema(origin)} />
   </BaseHead>
-  <div class="flex flex-col items-start gap-8 sm:items-center sm:gap-16">
+  <div
+    class="flex w-full max-w-6xl min-w-0 flex-col gap-8 sm:items-center
+      sm:gap-16"
+  >
     <div
       class="relative flex animate-in items-center justify-center duration-1000
         fade-in-50 zoom-in-75"
@@ -52,11 +55,10 @@ const educationExperiences = career.filter(
       </div>
       <DastaranLogo client:load />
     </div>
-    <div class="z-10 space-y-6 fade-in sm:text-center">
+    <div class="z-10 w-full max-w-prose space-y-6 fade-in sm:text-center">
       <p
-        class="max-w-prose animate-in text-pretty text-muted-foreground
-          duration-1000 slide-in-from-bottom-30 fade-in sm:text-lg
-          sm:slide-in-from-bottom-40"
+        class="animate-in text-pretty text-muted-foreground duration-1000
+          slide-in-from-bottom-30 fade-in sm:text-lg sm:slide-in-from-bottom-40"
       >
         A collection of <b class="text-foreground">
           web, mobile, and desktop projects
@@ -67,25 +69,26 @@ const educationExperiences = career.filter(
       </p>
     </div>
     <div
-      class="relative animate-in duration-1000 slide-in-from-bottom-5
-        sm:slide-in-from-top-5"
+      class="relative w-full min-w-0 animate-in duration-1000
+        slide-in-from-bottom-5 sm:slide-in-from-top-5"
     >
       <div
-        class="absolute -top-1/12 left-1/5 h-80 w-40 rotate-45 animate-in
-          bg-neutral-200/75 blur-2xl duration-[2.5s] fade-in
-          dark:bg-neutral-500/40"
+        class="pointer-events-none absolute -top-1/12 left-1/5 h-80 w-40
+          rotate-45 animate-in bg-neutral-200/75 blur-2xl duration-[2.5s]
+          fade-in dark:bg-neutral-500/40"
       >
       </div>
       <div
-        class="absolute -top-12 left-2/5 h-50 w-24 rotate-45 animate-in
-          bg-neutral-200/75 blur-3xl duration-[3s] fade-in lg:-top-1/5
-          lg:left-2/5 lg:h-96 lg:w-36 dark:bg-neutral-500/50"
+        class="pointer-events-none absolute -top-12 left-2/5 h-50 w-24 rotate-45
+          animate-in bg-neutral-200/75 blur-3xl duration-[3s] fade-in
+          lg:-top-1/5 lg:left-2/5 lg:h-96 lg:w-36 dark:bg-neutral-500/50"
       >
       </div>
       <div
-        class="relative grid grid-cols-1 gap-8 rounded-3xl border-t
-          bg-linear-to-b from-card/90 to-background/50 p-4 py-6 max-sm:-mx-4
-          sm:grid-cols-2 sm:p-8 lg:grid-cols-3"
+        class="relative grid w-full min-w-0 grid-cols-1 gap-8 rounded-3xl
+          border-t bg-linear-to-b from-card/90 to-background/50 p-4 py-6
+          max-sm:-mx-4 max-sm:w-[calc(100%+2rem)] sm:grid-cols-2 sm:p-8
+          lg:grid-cols-3"
       >
         <div
           class="absolute -top-px left-1/4 h-px w-1/3 animate-in bg-linear-to-r
@@ -99,7 +102,7 @@ const educationExperiences = career.filter(
             Projects
           </h2>
           <p class="max-w-prose text-muted-foreground">
-            Here are some of the projectsI. This is a growing list of our work,
+            Here are some of the projects. This is a growing list of our work,
             showcasing our skills and interests in web development and design.
           </p>
         </div>
@@ -126,7 +129,7 @@ const educationExperiences = career.filter(
         }
       </div>
     </div>
-    <div class="flex w-full max-w-3xl flex-col gap-4">
+    <div class="flex w-full max-w-3xl min-w-0 flex-col gap-4">
       <div class="flex flex-col gap-2">
         <h2 class="flex items-center gap-1 text-2xl font-bold">
           <ArticleNyTimesIcon size={28} weight="duotone" />
@@ -160,8 +163,10 @@ const educationExperiences = career.filter(
         }
       </div>
     </div>
-    <div class="flex w-full flex-row justify-center gap-12">
-      <div class="flex max-w-2xl flex-col gap-2">
+    <div
+      class="flex w-full min-w-0 flex-col items-center justify-center gap-12"
+    >
+      <div class="flex w-full max-w-2xl min-w-0 flex-col gap-2">
         <h2 class="flex items-center gap-1 text-2xl font-bold">
           <KanbanIcon size={28} weight="duotone" />
           Technologies We Use
@@ -172,13 +177,14 @@ const educationExperiences = career.filter(
           exploring new technologies and refining our approach. Here's our
           evolving toolkit.
         </p>
-        <div class="flex flex-wrap justify-center gap-4">
+        <div class="flex w-full min-w-0 flex-wrap justify-center gap-4">
           {
             Object.entries(SKILLS).map(([category, skillSet]) => {
               return (
                 <div
-                  class="flex flex-col gap-1 overflow-x-hidden rounded-lg border
-                    bg-background shadow-md offset-border"
+                  class="flex w-full max-w-full min-w-0 flex-col gap-1
+                    overflow-x-hidden rounded-lg border bg-background shadow-md
+                    offset-border"
                 >
                   <ul
                     class="relative flex snap-x snap-mandatory gap-4
@@ -237,7 +243,10 @@ const educationExperiences = career.filter(
         </div>
       </div> -->
     </div>
-    <section class="@container flex w-full flex-col gap-2 lg:max-w-3xl">
+    <section
+      class="@container flex w-full min-w-0 flex-col gap-2 lg:mx-auto
+        lg:max-w-3xl"
+    >
       <h2 class="flex items-center gap-1 text-2xl font-bold">
         <MailboxIcon size={28} weight="duotone" />
         Contact

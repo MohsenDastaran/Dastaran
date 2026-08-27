@@ -84,7 +84,7 @@ const canonicalURL = getCanonicalUrl(pathname, Astro.site);
     </a>
     <div
       class:list={[
-        "flex flex-col bg-background text-foreground",
+        "flex min-w-0 flex-col overflow-x-clip bg-background text-foreground",
         !isChatPage ? "min-h-dvh" : "h-dvh",
         isChatPage || isHomePage ? "pattern-neutral-400/5" : undefined,
       ]}
@@ -93,7 +93,7 @@ const canonicalURL = getCanonicalUrl(pathname, Astro.site);
       <main
         id="main-content"
         class:list={[
-          "container flex grow justify-center",
+          "container flex min-w-0 grow justify-center",
           isChatPage ? "overflow-hidden max-sm:pr-0" : "py-8 sm:py-12",
         ]}
       >

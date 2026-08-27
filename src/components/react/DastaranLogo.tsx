@@ -3,7 +3,8 @@ import { LiquidMetal } from "@paper-design/shaders-react";
 export default function DastaranLogo() {
   return (
     <div
-      className="relative size-40 overflow-hidden rounded-xl sm:size-72"
+      className="relative size-32 overflow-hidden rounded-xl sm:size-48
+        md:size-72"
       role="img"
       aria-label="Dastaran logo"
     >
