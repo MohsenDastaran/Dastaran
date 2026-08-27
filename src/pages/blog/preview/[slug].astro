@@ -62,6 +62,16 @@ const authorIds = resolveAuthorIds(post.authors);
   readingTime={readingTime}
   headings={headings}
   relatedPosts={relatedPosts}
+  previewDraft={{
+    title: post.title,
+    description: post.description,
+    body: post.body,
+    cover: post.cover ?? "",
+    tags: (post.tags ?? []).join(", "),
+    showComments: post.showComments,
+    publicationDate: post.publicationDate.toISOString(),
+    authors: authorIds,
+  }}
 >
   <MarkdownBody html={html} />
 </BlogPost>

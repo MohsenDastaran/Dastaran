@@ -109,6 +109,21 @@ export const blogPostApiSchema = z.object({
 
 export type BlogPostApi = z.infer<typeof blogPostApiSchema>;
 
+export const blogPostPatchSchema = z.object({
+  title: z.string().min(1).optional(),
+  description: z.string().optional(),
+  body: z.string().optional(),
+  cover: z.union([z.string(), z.null()]).optional(),
+  tags: z.array(z.string().min(1)).optional(),
+  showComments: z.boolean().optional(),
+  authors: z.array(z.string().min(1)).optional(),
+  status: z.enum(BLOG_STATUSES).optional(),
+  publicationDate: z.string().optional(),
+  modificationDate: z.string().optional(),
+});
+
+export type BlogPostPatch = z.infer<typeof blogPostPatchSchema>;
+
 const postsResponseSchema = z.union([
   z.array(z.unknown()),
   z.object({ posts: z.array(z.unknown()) }),
@@ -267,6 +282,36 @@ export async function fetchBlogPost(slug: string): Promise<BlogPostApi | null> {
     console.warn(`Blog API request for "${slug}" failed.`, error);
     return null;
   }
+}
+
+export async function updateBlogPost(
+  slug: string,
+  patch: BlogPostPatch,
+): Promise<{ ok: true } | { ok: false; status: number; error: string }> {
+  const response = await fetch(postsUrl(slug), {
+    method: "PATCH",
+    headers: apiHeaders(true),
+    body: JSON.stringify(patch),
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (response.ok) {
+    return { ok: true };
+  }
+  let error = `Save failed (${response.status})`;
+  try {
+    const payload: unknown = await response.json();
+    if (
+      payload &&
+      typeof payload === "object" &&
+      "error" in payload &&
+      typeof payload.error === "string"
+    ) {
+      error = payload.error;
+    }
+  } catch {
+    // Keep the status text fallback.
+  }
+  return { ok: false, status: response.status, error };
 }
 
 export async function publishBlogPost(slug: string): Promise<boolean> {

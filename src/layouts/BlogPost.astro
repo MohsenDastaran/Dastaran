@@ -20,7 +20,9 @@ import Comments from "@/components/Comments.astro";
 import { DUMMY_COMMENTS } from "@/data/comments";
 import { breadcrumbSchema, personRef, websiteRef } from "@/lib/schema";
 import { getEntries } from "astro:content";
-import BlogPreviewActions from "@/components/react/BlogPreviewActions";
+import BlogPreviewActions, {
+  type BlogPreviewDraft,
+} from "@/components/react/BlogPreviewActions";
 
 type Props = CollectionEntry<"blog">["data"] & {
   readingTime: ReadingTime;
@@ -28,6 +30,7 @@ type Props = CollectionEntry<"blog">["data"] & {
   relatedPosts?: Array<BlogPostCard>;
   isPreview?: boolean;
   slug?: string;
+  previewDraft?: BlogPreviewDraft;
 };
 
 const {
@@ -44,6 +47,7 @@ const {
   relatedPosts = [],
   isPreview = false,
   slug,
+  previewDraft,
 } = Astro.props;
 
 const authors = await getEntries(authorsReferences);
@@ -138,7 +142,7 @@ const articleImage = coverImageURL
   </BaseHead>
   <article class="flex w-full flex-col gap-12">
     {
-      isPreview && slug ? (
+      isPreview && slug && previewDraft ? (
         <div
           class="sticky top-16 z-30 mx-auto flex w-full max-w-3xl flex-col gap-3
             rounded-xl border bg-card p-4 shadow-sm offset-border sm:flex-row
@@ -146,9 +150,9 @@ const articleImage = coverImageURL
         >
           <p class="text-sm text-muted-foreground">
             This post is under review. It is not public, not in the sitemap, and
-            will not appear on /blog until you publish and rebuild the site.
+            will not appear on /blog until you publish.
           </p>
-          <BlogPreviewActions client:load slug={slug} />
+          <BlogPreviewActions client:load slug={slug} draft={previewDraft} />
         </div>
       ) : null
     }

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { apiUrl, getApiBaseUrl } from "./api";
 import {
   blogPostApiSchema,
+  blogPostPatchSchema,
   parsePostsPayload,
   resolveAuthorIds,
 } from "./blog-api";
@@ -53,6 +54,20 @@ describe("blogPostApiSchema", () => {
     expect(parsed.showComments).toBe(true);
     expect(parsed.authors).toBeUndefined();
     expect(parsed.cover).toBeUndefined();
+  });
+});
+
+describe("blogPostPatchSchema", () => {
+  it("accepts a partial update and a null cover", () => {
+    const parsed = blogPostPatchSchema.parse({
+      title: "Updated title",
+      cover: null,
+      tags: ["SEO"],
+      showComments: false,
+    });
+    expect(parsed.title).toBe("Updated title");
+    expect(parsed.cover).toBeNull();
+    expect(parsed.body).toBeUndefined();
   });
 });
 

@@ -85,15 +85,15 @@ Public `/blog/{slug}/` pages use `GET /posts` and match the slug. They do not ne
 
 ## `PATCH /posts/:slug`
 
-Publish (or update) a post. The preview **Publish** button sends:
+Update fields or publish. Require bearer auth. `200` with the post, or `204`. `400` invalid payload, `401` missing token, `404` missing slug.
+
+The preview **Edit** button sends the current title, description, Markdown `body`, cover, tags, `showComments`, and `modificationDate`. It does not change `status`. Empty cover is sent as `null`.
+
+The preview **Publish** button sends:
 
 ```json
 { "status": "published" }
 ```
-
-Require bearer auth. Suggested responses: `200`/`204` on success, `404` if missing.
-
-When publishing, set `publicationDate` if it was only a placeholder, and optionally `modificationDate`.
 
 ## `DELETE /posts/:slug`
 
@@ -105,7 +105,7 @@ Require bearer auth. Suggested responses: `204` on success, `404` if missing.
 
 1. Create the post as `under-review`.
 2. Open `https://www.dastaran.com/blog/preview/{slug}/?token=<BLOG_API_TOKEN>` once. The site stores an httpOnly cookie and redirects to the same path without the token in the URL.
-3. Review the rendered post. Use **Publish** or **Delete**.
+3. Review the rendered post. Use **Edit**, **Publish**, or **Delete**.
 4. After publish, `/blog/{slug}/` is available immediately. Rebuild if you also want sitemap, RSS, and `llms.txt` updated.
 
 The preview route is SSR (`prerender = false`), sends `noindex`, is disallowed in `robots.txt`, is excluded from the sitemap, and is not linked from the navbar.
