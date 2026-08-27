@@ -36,7 +36,6 @@ type Props = {
 export default function BlogPreviewActions({ slug, draft }: Props) {
   const [isPending, setIsPending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [hasPublished, setHasPublished] = useState(false);
   const [title, setTitle] = useState(draft.title);
   const [description, setDescription] = useState(draft.description);
   const [body, setBody] = useState(draft.body);
@@ -55,22 +54,34 @@ export default function BlogPreviewActions({ slug, draft }: Props) {
     setIsPending(true);
     setMessage(null);
     try {
-      const response = await fetch(
-        `/api/blog/${encodeURIComponent(slug)}/publish`,
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      const response = await fetch(`/api/blog/${encodeURIComponent(slug)}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "published" }),
+      });
       if (!response.ok) {
-        setMessage("Publish failed. Check the API and try again.");
+        let error = "Publish failed. Check the API and try again.";
+        try {
+          const payload: unknown = await response.json();
+          if (
+            payload &&
+            typeof payload === "object" &&
+            "error" in payload &&
+            typeof payload.error === "string"
+          ) {
+            error = payload.error;
+          }
+        } catch {
+          // Keep the default message.
+        }
+        setMessage(error);
+        setIsPending(false);
         return;
       }
-      setHasPublished(true);
-      setMessage("Published. It is now available on /blog.");
+      window.location.assign(`/blog/${slug}/`);
     } catch {
       setMessage("Publish failed. Check the API and try again.");
-    } finally {
       setIsPending(false);
     }
   }
@@ -240,7 +251,7 @@ export default function BlogPreviewActions({ slug, draft }: Props) {
         </Dialog>
         <Button
           type="button"
-          disabled={isPending || hasPublished}
+          disabled={isPending}
           onClick={() => {
             void publish();
           }}

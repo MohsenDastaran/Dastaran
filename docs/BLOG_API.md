@@ -89,11 +89,13 @@ Update fields or publish. Require bearer auth. `200` with the post, or `204`. `4
 
 The preview **Edit** button sends the current title, description, Markdown `body`, cover, tags, `showComments`, and `modificationDate`. It does not change `status`. Empty cover is sent as `null`.
 
-The preview **Publish** button sends:
+The preview **Publish** button sends the same `PATCH`, with only:
 
 ```json
 { "status": "published" }
 ```
+
+That is the only status change. There is no `/publish` path. After a successful publish the site opens `/blog/{slug}/`.
 
 ## `DELETE /posts/:slug`
 

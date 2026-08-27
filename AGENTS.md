@@ -28,7 +28,7 @@ Content collections defined in `src/content.config.ts` with Zod schemas:
 - `src/layouts/RootLayout.astro` — Base layout (navbar, footer, SEO head)
 - `src/layouts/BlogPost.astro` — Blog post wrapper (metadata, TOC, reading time, view count, comments)
 - Pages in `src/pages/` follow Astro file-based routing
-- API endpoints: `src/pages/api/chat/` (AI chat), `src/pages/api/blog/` (admin publish/delete)
+- API endpoints: `src/pages/api/chat/` (AI chat), `src/pages/api/blog/` (admin patch/delete)
 
 ### Components
 

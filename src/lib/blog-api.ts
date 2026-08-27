@@ -314,16 +314,6 @@ export async function updateBlogPost(
   return { ok: false, status: response.status, error };
 }
 
-export async function publishBlogPost(slug: string): Promise<boolean> {
-  const response = await fetch(postsUrl(slug), {
-    method: "PATCH",
-    headers: apiHeaders(true),
-    body: JSON.stringify({ status: "published" }),
-    signal: AbortSignal.timeout(15_000),
-  });
-  return response.ok;
-}
-
 export async function deleteBlogPost(slug: string): Promise<boolean> {
   const response = await fetch(postsUrl(slug), {
     method: "DELETE",
