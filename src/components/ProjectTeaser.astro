@@ -29,7 +29,8 @@ const {
 <div
   class={cn(
     `relative flex w-full min-w-0 flex-col justify-start gap-2 overflow-hidden
-    rounded-xl bg-card p-4 offset-border`,
+    rounded-xl bg-card p-4 offset-border lg:row-span-4 lg:last:col-start-3
+    lg:last:row-start-2`,
     className,
   )}
   {...props}
@@ -70,7 +71,9 @@ const {
   >
     <div class="flex min-w-0 flex-1 flex-col">
       <h3 class="truncate text-lg font-bold">{title}</h3>
-      <p class="line-clamp-2 text-xs text-muted-foreground">{description}</p>
+      <p class="line-clamp-2 text-xs text-muted-foreground sm:line-clamp-none">
+        {description}
+      </p>
     </div>
     {
       github || link ? (
