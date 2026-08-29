@@ -20,9 +20,4 @@ export const NAVIGATION_LINKS = [
     path: "/blog/",
     icon: ArticleNyTimesIcon,
   },
-  // {
-  //   label: "Chat",
-  //   path: "/chat/",
-  //   icon: BrainIcon,
-  // },
 ] as const satisfies Array<NavigationLink>;

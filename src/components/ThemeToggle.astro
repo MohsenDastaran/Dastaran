@@ -1,7 +1,6 @@
 ---
 import { SunIcon } from "@phosphor-icons/react/dist/ssr/Sun";
 import { MoonIcon } from "@phosphor-icons/react/dist/ssr/Moon";
-import { MonitorIcon } from "@phosphor-icons/react/dist/ssr/Monitor";
 ---
 
 <button
@@ -20,7 +19,6 @@ import { MonitorIcon } from "@phosphor-icons/react/dist/ssr/Monitor";
     data-theme="dark"
     weight="duotone"
   />
-
 </button>
 
 <style>
@@ -38,24 +36,10 @@ import { MonitorIcon } from "@phosphor-icons/react/dist/ssr/Monitor";
 
 <script is:inline>
   document.getElementById("themeToggle")?.addEventListener("click", () => {
-    // Cycle: system → light → dark → system
-    if (!("theme" in localStorage)) {
-      localStorage.theme = "light";
-    } else if (localStorage.theme === "light") {
-      localStorage.theme = "dark";
-    } else {
-      localStorage.removeItem("theme");
-    }
-
-    document.documentElement.classList.toggle(
-      "dark",
-      localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches),
-    );
-    document.documentElement.setAttribute(
-      "data-theme",
-      "theme" in localStorage ? localStorage.theme : "dark",
-    );
+    const isDark = document.documentElement.classList.contains("dark");
+    const theme = isDark ? "light" : "dark";
+    localStorage.theme = theme;
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    document.documentElement.setAttribute("data-theme", theme);
   });
 </script>
