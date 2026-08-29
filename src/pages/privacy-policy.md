@@ -6,7 +6,7 @@ description: Privacy policy for the website
 
 # Privacy Policy
 
-_Last updated: 05 June 2025_
+_Last updated: 29 August 2026_
 
 ## 1. Data Protection at a Glance
 
@@ -18,17 +18,17 @@ The following information provides a simple overview of what happens to your per
 
 **Who is responsible for data collection on this website?**
 
-The data processing on this website is carried out by the website operator. You can find their contact details in the section **Information on the Responsible Body** in this data protection declaration.
+The data processing on this website is carried out by the website operator. You can find their contact details in the section **Note to the Responsible Entity** in this data protection declaration.
 
 **How do I collect your data?**
 
-- Your data is collected when you provide it to us, for example, by entering it in a contact form.
+- Your data is collected when you provide it to me, for example, by entering it in a contact form.
 - Other data is collected automatically or with your consent by my IT systems when you visit the website. These are mainly technical data (e.g., internet browser, operating system, or time of the page view). This data is collected automatically as soon as you enter this website.
 
 **What do I use your data for?**
 
 - Some of the data is collected to ensure the error-free provision of the website.
-- Other data can be used to analyze your user behavior.
+- Other data can be used to process inquiries you send to me.
 
 **What rights do you have regarding your data?**
 
@@ -40,31 +40,17 @@ The data processing on this website is carried out by the website operator. You 
 
 You can contact me at any time about this and other questions on the subject of data protection.
 
-**Analysis tools and tools from third-party providers**
-
-When you visit this website, your surfing behavior can be statistically evaluated. This is mainly done with so-called analysis programs. You can find detailed information about these analysis programs in the following privacy policy.
-
 ---
 
 ## 2. Hosting
 
-I host the content of my website with the following provider:
+I host the content of my website with an external provider.
 
-### External Hosting
-
-This website is hosted externally. The personal data that is collected on this website is stored on the servers of the host(s). This may include IP addresses, contact requests, meta and communication data, contract data, contact data, names, website accesses, and other data generated via a website.
+This website is hosted externally. The personal data that is collected on this website is stored on the servers of the host. This may include IP addresses, contact requests, meta and communication data, contact data, names, website accesses, and other data generated via a website.
 
 External hosting is carried out for the purpose of fulfilling the contract with my potential and existing customers (Art. 6 para. 1 lit. b GDPR) and in the interest of a secure, fast, and efficient provision of my online offer by a professional provider (Art. 6 para. 1 lit. f GDPR). If the corresponding consent has been requested, the processing is carried out exclusively on the basis of Art. 6 para. 1 lit. a GDPR and § 25 para. 1 TTDSG, insofar as the consent includes the storage of cookies or access to information in the user's end device (e.g., device fingerprinting) within the meaning of the TTDSG. The consent can be revoked at any time.
 
-My host(s) will only process your data to the extent necessary to fulfill their performance obligations and follow my instructions with regard to this data.
-
-**I use the following host(s):**
-
-```
-Vercel Inc.
-440 N Barranca Ave #4133
-Covina, CA 91723
-```
+My host will only process your data to the extent necessary to fulfill their performance obligations and follow my instructions with regard to this data.
 
 ---
 
@@ -82,9 +68,7 @@ I would like to point out that data transmission over the Internet (e.g., when c
 
 **The responsible entity for data processing on this website is:**
 
-Dastaran - Conception, Design and Development
-
-Phone: 00491794393782
+Dastaran  
 Email: [mohsen.dastaran@gmail.com](mailto:mohsen.dastaran@gmail.com)
 
 The responsible entity is the natural or legal person who alone or jointly with others determines the purposes and means of the processing of personal data (e.g., names, email addresses, etc.).
@@ -99,7 +83,7 @@ If you have given your consent to data processing, I process your personal data 
 
 ### Recipients of Personal Data
 
-As part of my business activities, I cooperate with various external entities. Sometimes, it is also necessary to transmit personal data to these external entities. I only transfer personal data to external entities if this is necessary as part of fulfilling a contract, if I are legally obliged to do so (e.g., transferring data to tax authorities), if I have a legitimate interest according to Art. 6 Para. 1 lit. f GDPR in the transfer, or if another legal basis allows the data transfer. When using contract processors, I only pass on personal data of my customers based on a valid contract for contract processing. In the case of joint processing, a contract on joint processing is concluded.
+As part of my business activities, I cooperate with various external entities. Sometimes, it is also necessary to transmit personal data to these external entities. I only transfer personal data to external entities if this is necessary as part of fulfilling a contract, if I am legally obliged to do so (e.g., transferring data to tax authorities), if I have a legitimate interest according to Art. 6 Para. 1 lit. f GDPR in the transfer, or if another legal basis allows the data transfer. When using contract processors, I only pass on personal data of my customers based on a valid contract for contract processing. In the case of joint processing, a contract on joint processing is concluded.
 
 ### Revocation of Your Consent to Data Processing
 
@@ -136,7 +120,7 @@ If you have restricted the processing of your personal data, apart from their st
 
 ### SSL or TLS Encryption
 
-For security reasons and to protect the transmission of confidential content, such as orders or inquiries that you send to me as the site operator, this site uses SSL or TLS encryption. You can recognize an encrypted connection by the fact that the address line of the browser changes from `http://` to `https://` and by the lock symbol in your browser line.
+For security reasons and to protect the transmission of confidential content, such as inquiries that you send to me as the site operator, this site uses SSL or TLS encryption. You can recognize an encrypted connection by the fact that the address line of the browser changes from `http://` to `https://` and by the lock symbol in your browser line.
 
 If SSL or TLS encryption is activated, the data you transmit to me cannot be read by third parties.
 
@@ -148,15 +132,11 @@ If SSL or TLS encryption is activated, the data you transmit to me cannot be rea
 
 My website uses so-called "cookies". Cookies are small data packets and do not harm your device. They are stored either temporarily for the duration of a session (session cookies) or permanently (permanent cookies) on your device. Session cookies are automatically deleted after your visit. Permanent cookies remain stored on your device until you delete them yourself or an automatic deletion is carried out by your web browser.
 
-Cookies can be sent by me (first-party cookies) or by third parties (so-called third-party cookies). Third-party cookies enable certain services of third-party companies to be integrated within websites (e.g., cookies for processing payment services).
+Cookies can be sent by me (first-party cookies) or by third parties (so-called third-party cookies). Cookies have various functions. Many cookies are technically necessary as certain website functions would not work without them. Other cookies can be used to store preferences (for example, your theme setting).
 
-Cookies have various functions. Many cookies are technically necessary as certain website functions would not work without them (e.g., the shopping cart function or displaying videos). Other cookies can be used to analyze user behavior or for advertising purposes.
-
-Cookies that are required to carry out the electronic communication process, to provide certain functions you wish to use (e.g., for the shopping cart function) or to optimize the website (e.g., cookies for measuring the web audience) are stored on the basis of Art. 6 para. 1 lit. f GDPR unless another legal basis is specified. The website operator has a legitimate interest in storing necessary cookies for the technically error-free and optimized provision of its services. If consent to the storage of cookies and similar recognition technologies was requested, the processing is carried out exclusively on the basis of this consent (Art. 6 para. 1 lit. a GDPR and § 25 para. 1 TTDSG); consent can be revoked at any time.
+Cookies that are required to carry out the electronic communication process, to provide certain functions you wish to use, or to optimize the website are stored on the basis of Art. 6 para. 1 lit. f GDPR unless another legal basis is specified. The website operator has a legitimate interest in storing necessary cookies for the technically error-free and optimized provision of its services. If consent to the storage of cookies and similar recognition technologies was requested, the processing is carried out exclusively on the basis of this consent (Art. 6 para. 1 lit. a GDPR and § 25 para. 1 TTDSG); consent can be revoked at any time.
 
 You can configure your browser to inform you about the setting of cookies and to allow cookies only in individual cases, to exclude the acceptance of cookies for certain cases or in general, and to activate the automatic deletion of cookies when closing the browser. Disabling cookies may limit the functionality of this website.
-
-Which cookies and services are used on this website can be found in this privacy policy.
 
 ### Contact Form
 
@@ -166,8 +146,8 @@ The processing of these data is based on Art. 6 para. 1 lit. b GDPR if your requ
 
 The data you enter in the contact form will remain with me until you ask me to delete it, revoke your consent to storage, or the purpose for data storage no longer applies (e.g., after your request has been processed). Mandatory statutory provisions - in particular retention periods - remain unaffected.
 
-### Inquiries by Email, Phone, or Fax
+### Inquiries by Email or Phone
 
-If you contact me by email, telephone, your inquiry, including all resulting personal data (name, inquiry), will be stored and processed by me for the purpose of handling your request. I do not share this information without your consent.
+If you contact me by email or telephone, your inquiry, including all resulting personal data (name, inquiry), will be stored and processed by me for the purpose of handling your request. I do not share this information without your consent.
 
 The processing of these data is based on Art. 6 para. 1 lit. b GDPR if your request is related to the execution of a contract or is necessary for the implementation of pre-contractual measures. In all other cases, the processing is based on my legitimate interest in the effective processing of the requests addressed to me (Art. 6 para. 1 lit. f GDPR) or on your consent (Art. 6 para. 1 lit. a GDPR) if this has been requested; consent can be revoked at any time. The data sent by you to me via contact requests remain with me until you request me to delete, revoke your consent to the storage, or the purpose for the data storage lapses (e.g., after completion of your request). Mandatory statutory provisions - especially statutory retention periods - remain unaffected.

@@ -6,23 +6,20 @@ description: Legal notice for the website
 
 # Legal Notice
 
-_Last updated: 05 June 2025_
+_Last updated: 29 August 2026_
 
 ## Website Operator
 
 This website is operated by:
 
-**Dastaran – Conception, Design and Development**  
-Munich, Bavaria  
-Germany  
-Email: [mohsen.dastaran@gmail.com](mailto:mohsen.dastaran@gmail.com)  
-Phone: +49 (0) 179 4393782
+**Dastaran**  
+Email: [mohsen.dastaran@gmail.com](mailto:mohsen.dastaran@gmail.com)
 
 ---
 
 ## Responsible for Content
 
-According to Section 5 of TMG, I, Dastaran, am responsible for the content on this website (address as above).
+According to Section 5 of TMG, I, Dastaran, am responsible for the content on this website.
 
 ---
 
@@ -34,7 +31,7 @@ The contents of my pages have been created with the utmost care. However, I cann
 
 ## Copyright Notice
 
-All content and works on this website created by me are subject to Germany's copyright law. Duplication, processing, distribution, or any form of commercialization of such material beyond the scope of the copyright law shall require my prior written consent.
+All content and works on this website created by me are subject to copyright law. Duplication, processing, distribution, or any form of commercialization of such material beyond the scope of the copyright law shall require my prior written consent.
 
 ---
 
