@@ -1,9 +1,8 @@
 import type { APIRoute } from "astro";
+import { getSiteOrigin, pageUrl } from "@/lib/site";
 
-// Explicitly named AI crawlers/assistants so there's no ambiguity about them
-// being welcome to index and cite the site. The wildcard already allows them,
-// but stating it directly is the clearest signal and future-proofs against
-// stricter default behaviour.
+export const prerender = false;
+
 const AI_USER_AGENTS = [
   "GPTBot",
   "OAI-SearchBot",
@@ -30,12 +29,19 @@ Disallow: /blog/preview/
 
 ${aiRules}
 
-Sitemap: ${new URL("sitemap-index.xml", origin).href}
+Sitemap: ${pageUrl("/sitemap-index.xml", origin)}
+Sitemap: ${pageUrl("/sitemap.xml", origin)}
 
-# Curated entry point for LLMs and AI search
-# ${new URL("llms.txt", origin).href}
+# Curated entry points for LLMs and AI search
+# ${pageUrl("/llms.txt", origin)}
+# ${pageUrl("/llms-full.txt", origin)}
 `;
 };
 
 export const GET: APIRoute = ({ url }) =>
-  new Response(getRobotsTxt(url.origin));
+  new Response(getRobotsTxt(getSiteOrigin(url)), {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "public, max-age=3600",
+    },
+  });

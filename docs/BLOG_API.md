@@ -2,7 +2,7 @@
 
 The Astro site loads **published** blog posts from `GET {API_BASE_URL}/posts`. `/blog/` and `/blog/{slug}/` are SSR and fetch that list at **request time**, so new published posts show up without a rebuild.
 
-The sitemap, RSS feed, and `llms.txt` are still generated at **build time**. Rebuild after publishing if you want those to update.
+The sitemap (`/sitemap-index.xml`, `/sitemap.xml`), RSS feed, and `llms.txt` / `llms-full.txt` are generated at **request time** from published posts. Preview posts stay out of them.
 
 Posts that are still **under review** stay off the public site. Admins preview them at `/blog/preview/{slug}/` (SSR, noindex, not linked from the navbar).
 
@@ -108,7 +108,7 @@ Require bearer auth. Suggested responses: `204` on success, `404` if missing.
 1. Create the post as `under-review`.
 2. Open `https://www.dastaran.com/blog/preview/{slug}/?token=<BLOG_API_TOKEN>` once. The site stores an httpOnly cookie and redirects to the same path without the token in the URL.
 3. Review the rendered post. Use **Edit**, **Publish**, or **Delete**.
-4. After publish, `/blog/{slug}/` is available immediately. Rebuild if you also want sitemap, RSS, and `llms.txt` updated.
+4. After publish, `/blog/{slug}/` is available immediately. Sitemap, RSS, and `llms.txt` pick up published posts on the next request.
 
 The preview route is SSR (`prerender = false`), sends `noindex`, is disallowed in `robots.txt`, is excluded from the sitemap, and is not linked from the navbar.
 
@@ -149,7 +149,7 @@ Publishing a post:
 
 1. Create the post as `under-review` and preview it.
 2. Publish from `/blog/preview/{slug}/` (or set `status: "published"` in the backend).
-3. Public listing and post pages pick it up on the next request. Rebuild for sitemap, RSS, and `llms.txt`.
+3. Public listing and post pages pick it up on the next request. Sitemap, RSS, and `llms.txt` do too.
 
 ## Backend stack
 

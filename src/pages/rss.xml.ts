@@ -3,9 +3,12 @@ import rss, { type RSSFeedItem } from "@astrojs/rss";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import type { APIRoute } from "astro";
 import { getPosts } from "@/lib/posts";
+import { getSiteOrigin } from "@/lib/site";
+
+export const prerender = false;
 
 export const GET: APIRoute = async ({ url }) => {
-  const { origin } = url;
+  const origin = getSiteOrigin(url);
   const posts = await getPosts();
   const items = await Promise.all(
     posts.map(async ({ data, id }) => {
@@ -25,8 +28,8 @@ export const GET: APIRoute = async ({ url }) => {
         pubDate: publicationDate,
         description,
         categories: tags,
-        commentsUrl: showComments ? `/blog/${id}#comments` : undefined,
-        link: `/blog/${id}`,
+        commentsUrl: showComments ? `/blog/${id}/#comments` : undefined,
+        link: `/blog/${id}/`,
       } satisfies RSSFeedItem;
     }),
   );
