@@ -1,18 +1,29 @@
 ---
 import type { TocEntry } from "@/lib/posts";
 
-type Props = TocEntry;
+type Props = TocEntry & {
+  isChild?: boolean;
+};
 
-const { text, slug, children } = Astro.props;
+const { text, slug, children, isChild = false } = Astro.props;
 ---
 
 <li>
-  <a href={`#${slug}`}>{text}</a>
+  <a class="flex gap-1.5" href={`#${slug}`}>
+    {
+      isChild ? (
+        <span class="shrink-0 text-muted-foreground" aria-hidden="true">
+          -
+        </span>
+      ) : null
+    }
+    <span>{text}</span>
+  </a>
   {
     children && children.length > 0 && (
       <ol>
         {children.map((entry) => (
-          <Astro.self {...entry} />
+          <Astro.self {...entry} isChild />
         ))}
       </ol>
     )

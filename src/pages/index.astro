@@ -44,15 +44,16 @@ const educationExperiences = career.filter(
       sm:gap-16"
   >
     <div
-      class="relative flex animate-in items-center justify-center duration-1000
-        fade-in-50 zoom-in-75"
+      class="relative flex w-full max-w-full animate-in items-center
+        justify-center overflow-hidden duration-1000 fade-in-50 zoom-in-75
+        sm:overflow-visible"
     >
-      <div
-        class="absolute -inset-px animate-in rounded-2xl bg-linear-to-br
-          from-amber-600 via-sky-600 to-sky-400 opacity-75 blur-2xl
-          duration-[2s] zoom-in-80"
+      <!-- <div
+        class="absolute inset-2 animate-in rounded-2xl bg-linear-to-br
+          from-amber-600 via-sky-600 to-sky-400 opacity-75 blur-xl duration-[2s]
+          zoom-in-80 sm:-inset-px sm:blur-2xl"
       >
-      </div>
+      </div> -->
       <DastaranLogo client:load />
     </div>
     <div class="z-10 w-full max-w-prose space-y-6 fade-in sm:text-center">
