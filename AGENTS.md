@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Personal portfolio website (https://www.dastaran.com/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog loaded from a backend API at build time, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
+Company portfolio website (https://www.dastaran.com/) built with Astro 7, React 19, TypeScript, and Tailwind CSS v4. Features a blog loaded from a backend API at build time, an AI chatbot (Vercel AI SDK + AI Gateway), contact form (Resend), and view counting (Drizzle + Turso/libSQL).
 
 ## Commands
 

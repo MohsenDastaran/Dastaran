@@ -1,7 +1,7 @@
 {
   "name": "portfolio-website",
   "version": "3.0.0",
-  "description": "Personal portfolio website including a blog, an interactive AI chatbot and insights into my professional work.",
+  "description": "Company portfolio website including a blog, an interactive AI chatbot and insights into my professional work.",
   "homepage": "https://www.dastaran.com/",
   "bugs": {
     "email": "mohsen.dastaran@gmail.com",
